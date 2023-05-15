@@ -6,7 +6,7 @@ const env = loadEnv(process.cwd(), "");
 console.log(env);
 export default defineConfig({
   plugins: [vue()],
-  base: env.VITE_REPO_NAME ?? "/template-2023-1/",
+  base: env.VITE_REPO_NAME ?? "/KRTeam/",
 /*   base: env.VITE_REPO_NAME ?? "./", */
   resolve: {
     alias: {
