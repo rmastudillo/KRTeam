@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useTestStore } from "@/stores/testStore";
 import { ref } from "vue";
+import { Modal, Toast } from "bootstrap";
 import { onMounted, onUnmounted, reactive } from "vue";
 
 const testStore = useTestStore();
@@ -20,6 +21,15 @@ const toast = ref();
 const infoModal = ref();
 const bsToast = ref();
 
+onMounted(() => {
+  modal.value = new Modal(infoModal.value);
+  toast.value = new Toast(bsToast.value);
+});
+
+onUnmounted(() => {
+  modal.value = "";
+  toast.value = "";
+});
 const variableee = ref("");
 </script>
 <template>
@@ -178,6 +188,7 @@ const variableee = ref("");
                 <button
                   type="button"
                   class="btn-close"
+                  @click="modal.hide()"
                   aria-label="Close"
                 ></button>
               </div>
@@ -192,7 +203,13 @@ const variableee = ref("");
                 </button>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary">Close</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  @click="modal.hide()"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>
