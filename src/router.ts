@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { testRoute } from "./components/first_page/router";
 import { homeRoute } from "./components/home/router";
+import { localRoute } from "./components/local_page/router";
 
 export const routes = [
   {
     path: "/",
     component: () => import("@/layouts/MainLayout.vue"),
-    children: [...homeRoute, ...testRoute],
+    children: [...homeRoute, ...testRoute, ...localRoute],
   },
 ];
 

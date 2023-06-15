@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { getProducts } from "@/api/modules/default";
-import { ref, onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import TitleSection from "./components/TitleSection.vue";
 
 const products = ref([]);
 const getProduct = async () => {
@@ -13,7 +14,7 @@ onMounted(() => {
 });
 </script>
 <template>
-
+  <TitleSection />
 </template>
 
 <style>
@@ -22,5 +23,4 @@ onMounted(() => {
   min-height: fit-content; /* Alto fijo del contenedor */
   overflow: scroll; /* Oculta el contenido que exceda el tamaño del contenedor */
 }
-
 </style>
