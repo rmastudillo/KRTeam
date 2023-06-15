@@ -26,7 +26,6 @@ const isActive = (path: string) => path === activeRoute.value;
       </div>
     </nav>
   </div>
-  <div class="search-block">Busca tu Restobar preferido:</div>
 </template>
 <style lang="scss" scoped>
 ul {
@@ -37,7 +36,7 @@ ul {
   display: flex;
   height: 4rem;
   width: 100%;
-  padding: 0.75rem;
+  padding-inline: 5%;
   color: white;
   text-align: start;
   align-items: center;
