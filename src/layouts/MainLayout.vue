@@ -4,11 +4,11 @@ import Footer from "@/layouts/Footer.vue";
 import { RouterView } from "vue-router";
 </script>
 <template>
-  <Nav />
-  <main class="container flex-shrink-0 mb-4">
-    <RouterView/>
-  </main>
-  <footer class="container footer mb-2 mt-auto">
-    <Footer />
-  </footer>
+  <div class="min-h-screen flex flex-col">
+    <Nav />
+    <main class="container mb-4 flex-grow-1">
+      <RouterView />
+    </main>
+  </div>
+  <Footer />
 </template>
