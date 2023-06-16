@@ -1,71 +1,32 @@
-
-<script lang="ts" setup>
-import { useTestStore } from "@/stores/testStore";
-import { ref } from "vue";
-import { Modal, Toast } from "bootstrap";
-import { onMounted, onUnmounted, reactive } from "vue";
-
-const testStore = useTestStore();
-const modifica = () => {
-  console.log(1);
-  testStore.setTest("Modifiqué el teststore usando el método Test");
-  console.log(testStore.getTest);
-};
-
-defineProps({
-  msg: String,
-});
-
-const state = reactive({ count: 0 });
-const modal = ref();
-const toast = ref();
-const infoModal = ref();
-const bsToast = ref();
-
-onMounted(() => {
-  modal.value = new Modal(infoModal.value);
-  toast.value = new Toast(bsToast.value);
-});
-
-onUnmounted(() => {
-  modal.value = "";
-  toast.value = "";
-});
-const variableee = ref("");
-</script>
-
-
-
-
-
-
 <template>
-<nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-      <form class="d-flex">
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </nav>
+  <div id="mapid" style="height: 500px; width: 100%;"></div>
 </template>
 
+<script>
+import { onMounted, ref } from 'vue';
+import L from 'leaflet';
 
+export default {
+  setup() {
+    const map = ref(null);
 
+    onMounted(() => {
+      map.value = L.map('mapid').setView([51.505, -0.09], 13);
 
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+      }).addTo(map.value);
 
+      L.marker([51.5, -0.09]).addTo(map.value)
+        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+        .openPopup();
+    });
 
+    return { map };
+  },
+};
+</script>
 
-<style>
-.image-container {
-  width: full; /* Ancho fijo del contenedor */
-  min-height: fit-content; /* Alto fijo del contenedor */
-  overflow: scroll; /* Oculta el contenido que exceda el tamaño del contenedor */
-}
-
+<style scoped>
+#mapid { height: 180px; }
 </style>
