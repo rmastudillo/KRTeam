@@ -3,13 +3,13 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
 
 const campos = ref([
-  { id: "campo1", label: "Nombre Restaurante", type: "text", valor: "" },
-  { id: "campo2", label: "Dirección", type: "text", valor: "" },
-  { id: "campo3", label: "Ciudad", type: "text", valor: "" },
-  { id: "campo4", label: "Capacidad (personas)", type: "number", valor: "" },
-  { id: "campo5", label: "Nombre de contacto", type: "text", valor: "" },
-  { id: "campo5", label: "Correo", type: "email", valor: "" },
-  { id: "campo5", label: "Número de contacto", type: "tel", valor: "" },
+  { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
+  { id: "adress", label: "Dirección", type: "text", valor: "" },
+  { id: "city", label: "Ciudad", type: "text", valor: "" },
+  { id: "capacity", label: "Capacidad (personas)", type: "number", valor: "" },
+  { id: "contactName", label: "Nombre de contacto", type: "text", valor: "" },
+  { id: "email", label: "Correo", type: "email", valor: "" },
+  { id: "phoneNumber", label: "Número de contacto", type: "tel", valor: "" },
 ]);
 const handleSubmit = (e: any) => {
   e.preventDefault();
@@ -79,7 +79,7 @@ const handleSubmit = (e: any) => {
             class="form-control"
             required
           />
-          <label for="floatingInput">{{ campo.label }}</label>
+          <label :for="campo.id">{{ campo.label }}</label>
         </div>
       </div>
       <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%]">
