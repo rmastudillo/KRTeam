@@ -22,7 +22,11 @@ const isActive = (path: string) => path === activeRoute.value;
         <div>Home</div>
         <div>Login</div>
         <div>Register</div>
-        <div>Admin</div>
+        <router-link :to="{name: 'Admin'}">
+          <div>
+            Admin
+          </div>
+        </router-link>
       </div>
     </nav>
   </div>
