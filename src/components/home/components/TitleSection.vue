@@ -27,7 +27,7 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
     </h3>
   </div>
   <div class="flex flex-col lg:flex-row lg:max-h-min">
-    <div>
+    <div class="inline-flex justify-center">
       <img :src="restobarLanding" alt="My SVG Image" />
     </div>
     <div class="card-container flex-1">
@@ -68,14 +68,17 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
   font-style: normal;
   font-size: 20px;
   text-align: center;
+  width: 100%;
   @media screen(lg) {
-    width: 935px;
     height: 63px;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 21px;
     text-align: center;
+  }
+  @media screen(2xl) {
+    width: 935px;
   }
 }
 .title-container {
@@ -129,7 +132,7 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
   align-items: center;
   gap: 1rem;
   @media screen(lg) {
-    padding: 4%;
+    padding: 3%;
     justify-content: center;
   }
 }
