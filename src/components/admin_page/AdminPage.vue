@@ -40,8 +40,10 @@ const reservas = [
     </thead>
     <tbody>
         <!-- Loop through the list get the each student data -->
-        <tr v-for="item in locales" :key='item'>
-        <td v-for="field in fields1" :key='field'>{{item[field]}}</td>
+        <!-- <tr v-for="item in locales" :key='item.id'>
+        <td v-for="field in fields1" :key='field'>{{item[field]}}</td> -->
+        <tr v-for="item in locales" :key='item.Username'>
+        <td v-for="(value, field) in item" :key='field'>{{value}}</td>
         </tr>
     </tbody>
     </table>
@@ -65,8 +67,8 @@ const reservas = [
     </thead>
     <tbody>
         <!-- Loop through the list get the each student data -->
-        <tr v-for="item in reservas" :key='item'>
-        <td v-for="field in fields2" :key='field'>{{item[field]}}</td>
+        <tr v-for="item in reservas" :key='item.Username'>
+        <td v-for="(value, field) in item" :key='field'>{{value}}</td>
         </tr>
     </tbody>
     </table>
