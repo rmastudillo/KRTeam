@@ -56,18 +56,34 @@ onMounted(() => {
 
 defineExpose({ map, imglocal });
 </script>
-
 <template>
   <div class="map-container">
     <div id="mapid"></div>
   </div>
-  <div class="card" style=" width: 18rem;">
-    <img :src="imglocal" class="card-img-top" alt="My Image">
-    <div class="card-body">
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+
+    <div id="container-local" class="flex flex-col lg:flex-row lg:max-h-min">
+
+      <div id="container-img" class="inline-flex justify-center">
+        <img :src="imglocal" alt="My SVG Image" />
+      </div>
+
+      <div id="container-text1" class="card-container flex-1">
+        <div id="container-text2" >
+            <h2 id="tittlel">Kiara Nikei</h2>
+            <div id="subtitlel">
+              Tipo de comida: Japonesa <br>
+              Comidas: Almuerzo, Cena <br>
+              Acerca de: Experimenta los variados sabores de la gastronomía Nikkei y cocktelería de autor, en un ambiente muy lindo y acogedor.
+            </div>
+            <div id="button-container">
+              <button id="button-reservar" type="button" class="btn bg-white btn-lg text-center">
+                <span class="mx-2 text-3xl">Reserva</span>
+                <i class="bi bi-geo-alt-fill text-3xl" />
+              </button>
+            </div>
+        </div>
+      </div>
     </div>
-  </div>
 </template>
 
 <style lang="css" scoped>
@@ -84,4 +100,58 @@ defineExpose({ map, imglocal });
   width: 100%;
   max-width: 800px; /* Ajusta esto al ancho máximo que prefieras */
 }
+
+#container-local{
+  background-color:  black;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+#container-img{
+  padding: 5%;
+}
+
+#container-img img{
+  padding: 10%;
+  background-color: aliceblue;
+  color: black;
+}
+
+#container-text2{
+  background-color: aliceblue;
+  padding: 4%;
+}
+
+#tittlel{
+  width: 100%;
+  height: 63.2px;
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 50px;
+  line-height: 74px;
+  color: #000000;
+}
+
+#subtitlel{
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 32px;
+  color: #303030;
+  word-wrap: break-word;
+}
+
+#button-container{
+  display: flex;
+  justify-content: flex-end;
+}
+
+#container-text1{
+  padding: 5%;
+}
+
 </style>
