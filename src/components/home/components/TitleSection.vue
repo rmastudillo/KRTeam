@@ -10,12 +10,12 @@
       restaurant, reserva y listo!
     </h2>
     <button type="button" class="btn bg-white btn-lg text-center">
-      <span class="mx-2">Reserva</span>
-      <i class="bi bi-geo-alt-fill text-2x" />
+      <span class="mx-2 text-3xl">Reserva</span>
+      <i class="bi bi-geo-alt-fill text-3xl" />
     </button>
   </div>
 </template>
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .title {
   font-style: normal;
   font-weight: 600;
@@ -24,17 +24,41 @@
   text-align: center;
   color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  @media screen(lg) {
+    width: 768px;
+    height: 304px;
+    left: 337px;
+    top: 186px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 66px;
+    line-height: 98px;
+  }
 }
 .sub-title {
   font-style: normal;
   font-size: 20px;
   text-align: center;
+  @media screen(lg) {
+    width: 935px;
+    height: 63px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    text-align: center;
+  }
 }
 .title-container {
-  padding: 5%;
+  padding-inline: 5%;
+  padding-block: 10%;
   background-color: #72caba;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
+  @media screen(lg) {
+    padding: 5%;
+  }
 }
 </style>
