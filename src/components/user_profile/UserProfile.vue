@@ -29,7 +29,7 @@
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .titulo {
     background: #72caba;
     padding: 1%;
@@ -38,13 +38,18 @@
 }
 #infobox {
     background: #72caba;
-    border-radius: 25%;
+    border-radius: 10%;
     text-align: center;
     padding: 1%;
-    width: 50%;
-    margin-top: 5%;
+    width: 80%;
+    margin-top: 10%;
     margin-left: auto;
     margin-right: auto;
+    @media screen(lg) {
+        margin-top: 5%;
+        width: 50%;
+        ;
+    }
 }
 
 #infobox p {
