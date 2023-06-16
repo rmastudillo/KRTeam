@@ -114,7 +114,7 @@ defineExpose({ map, imglocal });
 
 #container-img img{
   padding: 4%;
-  background-color: aliceblue;
+  background-color: white;
   color: black;
 }
 
@@ -124,7 +124,7 @@ defineExpose({ map, imglocal });
 }
 
 #container-text2{
-  background-color: aliceblue;
+  background-color: white;
   padding-left: 4%;
   padding-top: 4%;
   padding-bottom: 4%;
