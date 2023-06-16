@@ -1,5 +1,20 @@
 <script lang="ts" setup>
 import restobarLanding from "@/assets/img/restobarLanding.svg";
+import { ref } from "vue";
+
+const campos = ref([
+  { id: "campo1", label: "Nombre Restaurante", type: "text", valor: "" },
+  { id: "campo2", label: "Dirección", type: "text", valor: "" },
+  { id: "campo3", label: "Ciudad", type: "text", valor: "" },
+  { id: "campo4", label: "Capacidad (personas)", type: "number", valor: "" },
+  { id: "campo5", label: "Nombre de contacto", type: "text", valor: "" },
+  { id: "campo5", label: "Correo", type: "email", valor: "" },
+  { id: "campo5", label: "Número de contacto", type: "tel", valor: "" },
+]);
+const handleSubmit = (e: any) => {
+  e.preventDefault();
+  console.log(e);
+};
 </script>
 <template>
   <div class="title-container">
@@ -42,6 +57,40 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
         nosotros!
       </h3>
     </div>
+  </div>
+  <div class="bg-white w-full h-[10vh]"></div>
+  <div class="form-main-container">
+    <h2 class="form-title">
+      ¿Te interesa usar ReservApppara para potenciar las visitas a tu
+      restaurante?
+    </h2>
+    <h3 class="form-subtitle">
+      Sin costo de inscripción o mensualidad. ¡Llena el formulario debajo y
+      conversemos!
+    </h3>
+    <form @submit="handleSubmit" class="w-full">
+      <div class="grid-container">
+        <div v-for="(campo, index) in campos" class="form-floating">
+          <input
+            :type="campo.type"
+            :id="campo.id"
+            :key="index"
+            v-model="campo.valor"
+            class="form-control"
+            required
+          />
+          <label for="floatingInput">{{ campo.label }}</label>
+        </div>
+      </div>
+      <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%]">
+        <button
+          type="submit"
+          class="btn bg-white btn-lg text-center w-full lg:w-1/2"
+        >
+          <span class="mx-2 text-3xl">Enviar</span>
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 <style lang="css" scoped>
@@ -134,6 +183,64 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
   @media screen(lg) {
     padding: 3%;
     justify-content: center;
+  }
+}
+.grid-container {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr;
+  width: 100%;
+  padding-inline: 5%;
+  margin-bottom: 5%;
+  @media screen(lg) {
+    margin-bottom: 2%;
+    padding-inline: 10%;
+    grid-row-gap: 20px;
+    column-gap: 10%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
+  }
+}
+
+.form-main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-inline: 5%;
+  padding-block: 10%;
+  background-color: #72caba;
+  @media screen(lg) {
+    padding: 3%;
+    justify-content: center;
+  }
+}
+.form-title {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 35px;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  @media screen(lg) {
+    font-size: 40px;
+    line-height: 50px;
+    width: 768px;
+    height: 148px;
+  }
+}
+.form-subtitle {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
+  color: #ffffff;
+  @media screen(lg) {
+    font-size: 30px;
+    line-height: 35px;
+    width: 768px;
+    height: 109px;
   }
 }
 </style>
