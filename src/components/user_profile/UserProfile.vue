@@ -31,8 +31,10 @@
 
 <style lang="scss" scoped>
 .titulo {
+    background: #72caba;
+    padding: 1%;
     text-align: center;
-    margin-top: 5%;
+    color: white;
 }
 #infobox {
     background: #72caba;
@@ -40,12 +42,14 @@
     text-align: center;
     padding: 1%;
     width: 50%;
+    margin-top: 5%;
     margin-left: auto;
     margin-right: auto;
 }
 
 #infobox p {
     margin: 2%;
+    color: white;
 }
 .datos {
     margin: 5%;
