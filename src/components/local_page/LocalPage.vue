@@ -76,9 +76,9 @@ defineExpose({ map, imglocal });
               Acerca de: Experimenta los variados sabores de la gastronomía Nikkei y cocktelería de autor, en un ambiente muy lindo y acogedor.
             </div>
             <div id="button-container">
-              <button id="button-reservar" type="button" class="btn bg-white btn-lg text-center">
+              <button id="button-reservar" type="button" class="btn btn-lg text-center">
                 <span class="mx-2 text-3xl">Reserva</span>
-                <i class="bi bi-geo-alt-fill text-3xl" />
+                <i class="bi bi-geo-alt-fill text-3xl"></i>
               </button>
             </div>
         </div>
@@ -96,9 +96,9 @@ defineExpose({ map, imglocal });
 }
 
 #mapid {
-  height: 200px;
+  height: 400px;
   width: 100%;
-  max-width: 800px; /* Ajusta esto al ancho máximo que prefieras */
+  max-width: 1250px; /* Ajusta esto al ancho máximo que prefieras */
 }
 
 #container-local{
@@ -107,19 +107,27 @@ defineExpose({ map, imglocal });
   margin-bottom: 5%;
 }
 
+
 #container-img{
-  padding: 5%;
+  padding: 3%;
 }
 
 #container-img img{
-  padding: 10%;
+  padding: 4%;
   background-color: aliceblue;
   color: black;
 }
 
+#container-text1{
+  padding: 3%;
+
+}
+
 #container-text2{
   background-color: aliceblue;
-  padding: 4%;
+  padding-left: 4%;
+  padding-top: 4%;
+  padding-bottom: 4%;
 }
 
 #tittlel{
@@ -148,10 +156,13 @@ defineExpose({ map, imglocal });
 #button-container{
   display: flex;
   justify-content: flex-end;
+  padding-right: 5%;
+
 }
 
-#container-text1{
-  padding: 5%;
+#button-reservar{
+  background-color: #C2C2C2;
+  margin-top: 3%;
 }
 
 </style>
