@@ -7,6 +7,15 @@
     onMounted(() => {
         // Hacer el fetch de la info a la API
     });
+
+    const editarPerfil = () => {
+        // Hacer el fetch a la API
+    }
+
+    const borrarCuenta = () => {
+        // Hacer el fetch a la API
+    }
+
 </script>
 
 <template>
@@ -24,6 +33,11 @@
         <div class="datos">
             <h4>Email:</h4>
             <p> {{email}}   </p>
+        </div>
+        <div id="botones">
+            <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
+            <button class="hidden" @click="editarPerfil">Editar perfíl</button> 
+            <button @click="borrarCuenta">Borrar cuenta</button>
         </div>
       </div>
     </div>
@@ -59,4 +73,26 @@
 .datos {
     margin: 5%;
 }
+
+#botones {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#botones button{
+    margin-bottom: 2%;
+    border-style: solid;
+    border-width: 1px;
+    background-color: lightgray;
+    border-color: black;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    @media screen(lg) {
+        width: 25%;
+        ;
+    }
+}
+
 </style>
