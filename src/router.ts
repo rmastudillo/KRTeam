@@ -3,12 +3,13 @@ import { testRoute } from "./components/first_page/router";
 import { homeRoute } from "./components/home/router";
 import { localRoute } from "./components/local_page/router";
 import { loginRoute } from "./components/login/router";
+import { registerRoute } from "./components/register/router";
 
 export const routes = [
   {
     path: "/",
     component: () => import("@/layouts/MainLayout.vue"),
-    children: [...homeRoute, ...testRoute, ...localRoute, ...loginRoute],
+    children: [...homeRoute, ...testRoute, ...localRoute, ...loginRoute, ...registerRoute],
   },
 ];
 
