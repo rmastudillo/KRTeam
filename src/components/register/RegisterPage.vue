@@ -1,4 +1,34 @@
 <script setup>
+import { ref } from 'vue';
+
+let name = ref('');
+let email = ref('');
+let password = ref('');
+let passwordConfirmation = ref('');
+
+const register = async () => {
+  if (password.value !== passwordConfirmation.value) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
+
+  const response = await fetch('', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username: email.value,
+      password: password.value
+    })
+  });
+
+  if (!response.ok) {
+    alert('Hubo un problema con el registro');
+  } else {
+    alert('Registro exitoso!');
+  }
+}
 
 </script>
 <template>
@@ -18,7 +48,7 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="text" id="form3Example1c" class="form-control" />
+                      <input v-model="username" type="text" id="form3Example1c" class="form-control" />
                       <label class="form-label" for="form3Example1c">Tú Nombre</label>
                     </div>
                   </div>
@@ -26,7 +56,7 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="email" id="form3Example3c" class="form-control" />
+                      <input v-model="email" type="email" id="form3Example4c" class="form-control" />
                       <label class="form-label" for="form3Example3c">Email</label>
                     </div>
                   </div>
@@ -34,7 +64,7 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" id="form3Example4c" class="form-control" />
+                      <input v-model="password" type="password" id="form3Example4c" class="form-control" />
                       <label class="form-label" for="form3Example4c">Contraseña</label>
                     </div>
                   </div>
@@ -42,13 +72,18 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" id="form3Example4cd" class="form-control" />
+                      <input v-model="passwordConfirmation" type="password" id="form3Example4c" class="form-control" />
                       <label class="form-label" for="form3Example4cd">Repite tu Contraseña</label>
                     </div>
                   </div>
+                  
+
+
+
+                  
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <button type="button" class="btn btn-secondary btn-lg">Registrarse</button>
+                    <button @click="register" type="button" class="btn btn-secondary btn-lg">Registrarse</button>
                   </div>
 
                 </form>

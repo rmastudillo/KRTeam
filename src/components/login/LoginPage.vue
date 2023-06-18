@@ -1,60 +1,5 @@
 <script setup>
-import imglocal from "@/assets/img/image3.jpg";
-import imggps from "@/assets/img/ubi1.png";
-import imggpslocal from "@/assets/img/local1.png";
-import { onMounted, ref } from 'vue';
-import L from 'leaflet';
 
-const map = ref(null);
-
-// Locales coordenadas
-const locales = [
-  { name: 'Local 1', coordinates: [ -33.53107140077256, -70.66385483116008] },
-  { name: 'Local 2', coordinates: [-33.520897439872115, -70.65229264363981] },
-  // ... más locales
-];
-
-// Define los iconos personalizados
-const gpsIcon = L.icon({
-  iconUrl: imggps,
-  iconSize: [38, 70], // Tamaño del icono, puedes ajustarlo a tus necesidades
-});
-
-const localIcon = L.icon({
-  iconUrl: imggpslocal,
-  iconSize: [30, 30], // Tamaño del icono, puedes ajustarlo a tus necesidades
-});
-
-onMounted(() => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-
-      map.value = L.map('mapid').setView([lat, lon], 16);
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-      }).addTo(map.value);
-
-      // Añade un marcador para cada local
-      locales.forEach((local) => {
-        L.marker(local.coordinates, { icon: localIcon }).addTo(map.value)
-          .bindPopup(local.name)
-          .openPopup();
-      });
-
-      // Añade un marcador para la ubicación actual del usuario
-      L.marker([lat, lon], { icon: gpsIcon }).addTo(map.value)
-        .bindPopup('Tu Ubicación')
-        .openPopup();
-    });
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-});
-
-defineExpose({ map, imglocal });
 </script>
 <template>
   <section class="vh-100">
@@ -85,7 +30,12 @@ defineExpose({ map, imglocal });
             <label class="form-label" for="form3Example4">Correo Electrónico</label>
           </div>
 
-
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Checkbox -->
+            <div class="form-check mb-0">
+            </div>
+            <a href="#!" class="text-body">¿Olvidaste tu contraseña?</a>
+          </div>
 
           <div class="text-center text-lg-start mt-4 pt-2">
             <button type="button" class="btn btn-secondary btn-lg"
