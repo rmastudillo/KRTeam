@@ -53,16 +53,9 @@ onMounted(async () => {
 const fields1 = [
       'Id', 'Nombre', 'Región', 'Comuna', 'Dirección', 'Número de local', ' '
     ]
-// const locales = [
-//   { Username: 'Kiara Nikkei', Dirección: 'Calle Sur #1242', Ciudad: 'Santiago', Capacidad: 25, Nombre: 'Pedro Hernández', Correo: 'phernan@hotmail.com', ' ': 'ICONO EDITAR' },
-//   { Username: 'Kiara Nikkei', Dirección: 'Calle Sur #1242', Ciudad: 'Santiago', Capacidad: 25, Nombre: 'Pedro Hernández', Correo: 'phernan@hotmail.com', ' ': 'ICONO EDITAR' },
-// ];
 const fields2 = [
       'Id', 'Nombre', 'Región', 'Comuna', 'Dirección', 'Número de local', 'Correo', 'Estado de solicitud', ' '
     ]
-// const reservas = [
-//   { Username: 'Kiara Nikkei', RestoBar: 'Kiara Nikkei', Mesa: 10, 'Número de Personas': 2, Fecha: '22-05-2023', Hora: '17:00', Correo: 'peni1234@hotmail.com', Número: '+56912345678', ' ': 'ICONO BASURERO' },
-// ];
 
 </script>
 
@@ -89,10 +82,7 @@ const fields2 = [
     </thead>
     <tbody>
         <!-- Loop through the list get the each student data -->
-        <!-- <tr v-for="item in locales" :key='item.id'>
-        <td v-for="field in fields1" :key='field'>{{item[field]}}</td> -->
         <tr v-for="item in locales" :key='item.id'>
-        <!-- <td v-for="(value, field) in item" :key='field'>{{value}}</td> -->
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.region }}</td>
@@ -124,7 +114,6 @@ const fields2 = [
     <tbody>
         <!-- Loop through the list get the each student data -->
         <tr v-for="item in reservas" :key='item.id'>
-        <!-- <td v-for="(value, field) in item" :key='field'>{{value}}</td> -->
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.region }}</td>
