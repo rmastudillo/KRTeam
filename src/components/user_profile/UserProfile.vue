@@ -1,20 +1,70 @@
 <script lang="ts" setup>
-    import { onMounted, onUnmounted, reactive } from "vue";
-    const usuario = "UserName"
-    const nombre = "RealName"
-    const email = "UserEmail"
+    import { ref, onMounted, onUnmounted } from "vue";
+    // const usuario = "UserName"
+    // const nombre = "RealName"
+    // const email = "UserEmail"
 
-    onMounted(() => {
-        // Hacer el fetch de la info a la API
+    const usuario = ref({ 
+        email: 'UserEmail',
+        full_name: 'UserName',
+        is_active: false,
+        is_superuser: false,
+        is_restobar_owner: false,
+        id: 0,
+        restobars: [],
+    });
+
+    // const usuario = ref();
+
+    onMounted(async () => {
+        try {
+            const response = await fetch('http://35.232.169.75/api/v1/users/me');
+            if (response.ok) {
+            usuario.value = await response.json();
+            } else {
+            console.error('No se pudo obtener la información del usuario');
+            }
+        } catch (error) {
+            console.error('Error tratando de obtener la información del usuario:', error);
+        }
+    });
+
+    onUnmounted(() => {
+        usuario.value = { 
+        email: 'UserEmail',
+        full_name: 'UserName',
+        is_active: false,
+        is_superuser: false,
+        is_restobar_owner: false,
+        id: 0,
+        restobars: [],
+    }
     });
 
     const editarPerfil = () => {
         // Hacer el fetch a la API
     }
 
-    const borrarCuenta = () => {
-        // Hacer el fetch a la API
+    const HandleButtonBorrarCuenta = () => {
+        // Mostrar modal con confirmación
     }
+
+    const borrarCuenta = async () => {
+        try {
+            const response = await fetch('http://35.232.169.75/api/v1/users/me', {
+            method: 'DELETE',
+            });
+
+            if (response.ok) {
+            console.log('Se ha eliminado la cuenta correctamente');
+            // Perform any additional actions after successful deletion
+            } else {
+            console.error('No se pudo eliminar la cuenta');
+            }
+        } catch (error) {
+            console.error('Error tratando de borrar la cuenta:', error);
+        }
+    };
 
 </script>
 
@@ -22,22 +72,22 @@
     <div>
       <h1 class="titulo"> Perfíl </h1>
       <div id="infobox">
-        <div class="datos">
+        <!-- <div class="datos">
             <h4>Usuario:</h4>
             <p> {{usuario}}   </p>
-        </div>
+        </div> -->
         <div class="datos">
             <h4>Nombre Completo:</h4>
-            <p> {{nombre}}   </p>
+            <p> {{ usuario.full_name }}   </p>
         </div>
         <div class="datos">
             <h4>Email:</h4>
-            <p> {{email}}   </p>
+            <p> {{ usuario.email }}   </p>
         </div>
         <div id="botones">
             <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
             <button class="hidden" @click="editarPerfil">Editar perfíl</button> 
-            <button @click="borrarCuenta">Borrar cuenta</button>
+            <button @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
         </div>
       </div>
     </div>
