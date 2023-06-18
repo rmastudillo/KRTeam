@@ -1,8 +1,6 @@
 <script lang="ts" setup>
     import { ref, onMounted, onUnmounted } from "vue";
-    // const usuario = "UserName"
-    // const nombre = "RealName"
-    // const email = "UserEmail"
+    import { useRouter } from "vue-router";
 
     const usuario = ref({ 
         email: 'UserEmail',
@@ -14,15 +12,15 @@
         restobars: [],
     });
 
-    // const usuario = ref();
+    const router = useRouter();
 
     onMounted(async () => {
         try {
             const response = await fetch('http://35.232.169.75/api/v1/users/me');
             if (response.ok) {
-            usuario.value = await response.json();
+              usuario.value = await response.json();
             } else {
-            console.error('No se pudo obtener la información del usuario');
+              console.error('No se pudo obtener la información del usuario');
             }
         } catch (error) {
             console.error('Error tratando de obtener la información del usuario:', error);
@@ -47,6 +45,7 @@
 
     const HandleButtonBorrarCuenta = () => {
         // Mostrar modal con confirmación
+        borrarCuenta()
     }
 
     const borrarCuenta = async () => {
@@ -54,12 +53,11 @@
             const response = await fetch('http://35.232.169.75/api/v1/users/me', {
             method: 'DELETE',
             });
-
             if (response.ok) {
-            console.log('Se ha eliminado la cuenta correctamente');
-            // Perform any additional actions after successful deletion
+              console.log('Se ha eliminado la cuenta correctamente');
+              router.push('/')
             } else {
-            console.error('No se pudo eliminar la cuenta');
+              console.error('No se pudo eliminar la cuenta');
             }
         } catch (error) {
             console.error('Error tratando de borrar la cuenta:', error);
