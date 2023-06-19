@@ -7,17 +7,16 @@ let password = ref('');
 
 const url = 'http://35.232.169.75/api/v1/login';
 
-const data = new URLSearchParams();
-data.append('grant_type', '');
-data.append('username', `${email.value}`);
-data.append('password', `${password.value}`);
-data.append('scope', '');
-data.append('client_id', '');
-data.append('client_secret', '');
 
 
 const login = async () => {
-
+  const data = new URLSearchParams();
+  data.append('grant_type', '');
+  data.append('username', `${email.value}`);
+  data.append('password', `${password.value}`);
+  data.append('scope', '');
+  data.append('client_id', '');
+  data.append('client_secret', '');
 
   const response = await fetch(url, {
   method: 'POST',
