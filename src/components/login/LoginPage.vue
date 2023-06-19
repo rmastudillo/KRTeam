@@ -1,10 +1,45 @@
 <script setup>
+import { ref } from 'vue';
+
+
+let email = ref('');
+let password = ref('');
+
+const url = 'http://35.232.169.75/api/v1/login';
+
+const data = new URLSearchParams();
+data.append('grant_type', '');
+data.append('username', `${email.value}`);
+data.append('password', `${password.value}`);
+data.append('scope', '');
+data.append('client_id', '');
+data.append('client_secret', '');
+
+
+const login = async () => {
+
+
+  const response = await fetch(url, {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: data
+  });
+
+  if (!response.ok) {
+    alert('Hubo un problema con el inicio de sesión porfavor verifica los datos ingresados');
+  } else {
+    alert('Inicio de sesión exitoso!');
+  }
+}
 
 </script>
 <template>
-  <section class="vh-100">
+  <section class="vh-min-100">
   <div class="container-fluid h-custom">
-    <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="row d-flex justify-content-center align-items-center h-min-100">
       <div class="col-md-9 col-lg-6 col-xl-5">
         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
           class="img-fluid" alt="Sample image">
@@ -18,16 +53,16 @@
 
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <input type="email" id="form3Example3" class="form-control form-control-lg"
+            <input v-model="email" type="email" id="form3Example3" class="form-control form-control-lg"
               placeholder="Ingresa Correo electrónico" />
             <label class="form-label" for="form3Example3"> Dirección de correo electrónico</label>
           </div>
 
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <input type="password" id="form3Example4" class="form-control form-control-lg"
+            <input v-model="password" type="password" id="form3Example4" class="form-control form-control-lg"
               placeholder="Ingresa Contraseña" />
-            <label class="form-label" for="form3Example4">Correo Electrónico</label>
+            <label class="form-label" for="form3Example4">Contraseña</label>
           </div>
 
           <div class="d-flex justify-content-between align-items-center">
@@ -38,7 +73,7 @@
           </div>
 
           <div class="text-center text-lg-start mt-4 pt-2">
-            <button type="button" class="btn btn-secondary btn-lg"
+            <button @click="login" type="button" class="btn btn-secondary btn-lg"
               style="padding-left: 2.5rem; padding-right: 2.5rem;">Iniciar Sesión</button>
             <p class="small fw-bold mt-2 pt-1 mb-0">¿No tienes cuenta? 
               <a href="#!" class="link-danger">Registrate</a>

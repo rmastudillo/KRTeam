@@ -5,7 +5,7 @@ let name = ref('');
 let email = ref('');
 let password = ref('');
 let passwordConfirmation = ref('');
-
+  
 const register = async () => {
   if (password.value !== passwordConfirmation.value) {
     alert('Las contraseñas no coinciden');
@@ -18,7 +18,8 @@ const register = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      username: email.value,
+      email: email.value,
+      full_name: name.value,
       password: password.value
     })
   });
