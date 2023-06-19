@@ -26,7 +26,7 @@ onMounted(async () => {
 });
 
 
-const reservas = ref<Array<{ 
+const solicitudes = ref<Array<{ 
     name: string,
     owner_email: string,
     address: string,
@@ -39,9 +39,9 @@ const reservas = ref<Array<{
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://35.232.169.75/api/v1/reservations/');
+    const response = await fetch('http://35.232.169.75/api/v1/restobars_requests/');
     if (response.ok) {
-      reservas.value = await response.json();
+      solicitudes.value = await response.json();
     } else {
       console.error('No se pudo obtener las reservas');
     }
@@ -113,7 +113,7 @@ const fields2 = [
     </thead>
     <tbody>
         <!-- Loop through the list get the each student data -->
-        <tr v-for="item in reservas" :key='item.id'>
+        <tr v-for="item in solicitudes" :key='item.id'>
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.region }}</td>
