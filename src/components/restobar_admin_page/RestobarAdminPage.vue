@@ -11,6 +11,19 @@ const reservas = ref<Array<{
     user_id: number,
 }>>([]);
 
+// onMounted(async () => {
+//   try {
+//     const response = await fetch('http://35.232.169.75/api/v1/reservations/');
+//     if (response.ok) {
+//       reservas.value = await response.json();
+//     } else {
+//       console.error('No se pudo obtener las reservas');
+//     }
+//   } catch (error) {
+//     console.error('Error tratando de obtener las reservas:', error);
+//   }
+// });
+
 const fields = [
       'Id', 'Mesa', 'Número de personas', 'Fecha', 'Hora', ' '
     ]
