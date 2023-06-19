@@ -4,12 +4,13 @@ import { homeRoute } from "./components/home/router";
 import { localRoute } from "./components/local_page/router";
 import { userProfileRoute } from "./components/user_profile/router";
 import { adminRoute } from "./components/admin_page/router";
+import { RestobarAdminRoute } from "./components/restobar_admin_page/router";
 
 export const routes = [
   {
     path: "/",
     component: () => import("@/layouts/MainLayout.vue"),
-    children: [...homeRoute, ...testRoute, ...localRoute, ...userProfileRoute, ...adminRoute],
+    children: [...homeRoute, ...testRoute, ...localRoute, ...userProfileRoute, ...adminRoute, ...RestobarAdminRoute],
   },
 ];
 
