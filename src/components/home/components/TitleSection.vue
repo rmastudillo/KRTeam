@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 const campos = ref([
   { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
-  { id: "adress", label: "Dirección", type: "text", valor: "" },
+  { id: "address", label: "Dirección", type: "text", valor: "" },
   { id: "city", label: "Ciudad", type: "text", valor: "" },
   { id: "capacity", label: "Capacidad (personas)", type: "number", valor: "" },
   { id: "contactName", label: "Nombre de contacto", type: "text", valor: "" },
@@ -102,34 +102,41 @@ const handleSubmit = (e: any) => {
   text-align: center;
   color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .title {
     width: 768px;
     height: 304px;
     left: 337px;
     top: 186px;
-    font-style: normal;
-    font-weight: 600;
     font-size: 66px;
     line-height: 98px;
   }
 }
+
 .sub-title {
   font-style: normal;
   font-size: 20px;
   text-align: center;
   width: 100%;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .sub-title {
     height: 63px;
-    font-style: normal;
     font-weight: 400;
     font-size: 18px;
     line-height: 21px;
-    text-align: center;
   }
-  @media screen(2xl) {
+}
+
+@media screen and (min-width: 1536px) {
+  .sub-title {
     width: 935px;
   }
 }
+
 .title-container {
   padding-inline: 5%;
   padding-block: 10%;
@@ -138,7 +145,10 @@ const handleSubmit = (e: any) => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .title-container {
     padding: 5%;
   }
 }
@@ -150,11 +160,12 @@ const handleSubmit = (e: any) => {
   line-height: 50px;
   text-align: center;
   color: #000000;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .title-black {
     width: auto;
     height: 90px;
-    font-style: normal;
-    font-weight: 600;
     font-size: 42px;
     line-height: 62px;
   }
@@ -168,10 +179,14 @@ const handleSubmit = (e: any) => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .title-container-white {
     padding: 5%;
   }
 }
+
 .card-container {
   padding-inline: 5%;
   padding-block: 10%;
@@ -180,11 +195,15 @@ const handleSubmit = (e: any) => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .card-container {
     padding: 3%;
     justify-content: center;
   }
 }
+
 .grid-container {
   display: grid;
   grid-gap: 10px;
@@ -192,7 +211,10 @@ const handleSubmit = (e: any) => {
   width: 100%;
   padding-inline: 5%;
   margin-bottom: 5%;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .grid-container {
     margin-bottom: 2%;
     padding-inline: 10%;
     grid-row-gap: 20px;
@@ -210,11 +232,15 @@ const handleSubmit = (e: any) => {
   padding-inline: 5%;
   padding-block: 10%;
   background-color: #72caba;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .form-main-container {
     padding: 3%;
     justify-content: center;
   }
 }
+
 .form-title {
   font-style: normal;
   font-weight: 600;
@@ -223,20 +249,27 @@ const handleSubmit = (e: any) => {
   text-align: center;
   color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .form-title {
     font-size: 40px;
     line-height: 50px;
     width: 768px;
     height: 148px;
   }
 }
+
 .form-subtitle {
   font-weight: 400;
   font-size: 20px;
   line-height: 25px;
   text-align: center;
   color: #ffffff;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .form-subtitle {
     font-size: 30px;
     line-height: 35px;
     width: 768px;
