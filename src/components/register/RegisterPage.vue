@@ -12,7 +12,7 @@ const register = async () => {
     return;
   }
 
-  const response = await fetch('', {
+  const response = await fetch(`http://35.232.169.75/api/v1/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
