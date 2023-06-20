@@ -19,6 +19,7 @@ module.exports = {
   ],
   extends: [
     "plugin:vue/vue3-recommended",
+    "@babel/core",
     "eslint:recommended",
     "plugin:prettier/recommended",
     "@vue/typescript",
