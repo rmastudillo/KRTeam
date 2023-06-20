@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
-
+const router = useRouter();
 let email = ref("");
 let password = ref("");
 
@@ -31,6 +32,7 @@ const login = async () => {
     );
   } else {
     alert("Inicio de sesión exitoso!");
+    router.push({ name: 'Local' });
   }
 };
 </script>
