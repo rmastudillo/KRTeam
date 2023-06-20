@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+
 let email = ref("");
 let password = ref("");
 
@@ -95,7 +96,9 @@ const login = async () => {
               </button>
               <p class="small fw-bold mt-2 pt-1 mb-0">
                 ¿No tienes cuenta?
-                <a href="#!" class="link-danger">Registrate</a>
+                <router-link :to="{name: 'Register'}">
+                  <a href="#!" class="link-danger">Registrate</a>
+                </router-link>
               </p>
             </div>
           </form>
