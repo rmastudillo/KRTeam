@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import Login from '@/components/login/LoginPage.vue';
+import Login from '../../src/components/login/LoginPage.vue';
 
 // Mockea el router y el fetch
 jest.mock('vue-router', () => ({

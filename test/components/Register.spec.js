@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import Register from '@/components/register/RegisterPage.vue'; 
+import Register from '../../src/components/register/RegisterPage.vue'; 
 
 // Mockea el router y el fetch
 jest.mock('vue-router', () => ({
