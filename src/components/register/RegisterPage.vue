@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+
 let name = ref("");
 let email = ref("");
 let password = ref("");
@@ -46,6 +47,7 @@ const register = async () => {
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
                     Sign up
                   </p>
+                  
 
                   <form class="mx-1 mx-md-4">
                     <div class="d-flex flex-row align-items-center mb-4">
@@ -106,11 +108,18 @@ const register = async () => {
                           >Repite tu Contraseña</label
                         >
                       </div>
+                      
                     </div>
 
                     <div
                       class="d-flex justify-content-center mx-4 mb-3 mb-lg-4"
                     >
+                    <p class="small fw-bold mt-2 pt-1 mb-0">
+                        ¿Tienes cuenta?
+                        <router-link :to="{name: 'Login'}">
+                          <a href="#!" class="link-danger">Iniciar Sesión</a>
+                        </router-link>
+                      </p>
                       <button
                         @click="register"
                         type="button"
