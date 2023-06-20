@@ -9,6 +9,7 @@ module.exports = {
     "\\.[jt]sx?$": 'babel-jest'
   },
      testEnvironmentOptions: {
-       customExportConditions: ["jsdom", "node", "node-addons"],
+       customExportConditions: ["jsdom"],
     },
+    testEnvironment: 'jsdom',
 };
