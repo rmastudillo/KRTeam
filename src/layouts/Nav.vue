@@ -19,9 +19,15 @@ const isActive = (path: string) => path === activeRoute.value;
         <img :src="krteamlogo" alt="asdas" />
       </router-link>
       <div class="flex flex-row flex-nowrap gap-3">
-        <div>Home</div>
-        <div>Login</div>
-        <div>Register</div>
+        <router-link :to="{name: 'Home'}">
+          <div>Home</div>
+        </router-link>
+        <router-link :to="{name: 'Login'}">
+          <div>Login</div>
+        </router-link>
+        <router-link :to="{name: 'Register'}">
+          <div>Register</div>
+        </router-link>
         <router-link :to="{name: 'Admin'}">
           <div>
             Admin
