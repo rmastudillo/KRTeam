@@ -61,7 +61,7 @@ const handleSubmit = (e: any) => {
   <div class="bg-white w-full h-[10vh]"></div>
   <div class="form-main-container">
     <h2 class="form-title">
-      ¿Te interesa usar ReservApppara para potenciar las visitas a tu
+      ¿Te interesa usar ReservApp para potenciar las visitas a tu
       restaurante?
     </h2>
     <h3 class="form-subtitle">
