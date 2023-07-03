@@ -4,13 +4,24 @@ import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
 import L, { LatLngLiteral } from "leaflet";
 import { onMounted, ref } from "vue";
+import { Modal } from "bootstrap";
+import selectorHorario from "./components/selectorHorario.vue";
+
+const modalReserva = ref();
+const infoModal = ref();
+const selectedDate = ref();
+const selectedTime = ref();
+const textInput = ref();
+
+const crearReserva = () => {
+};
 
 const map = ref();
 
 // Locales coordenadas
 const locales = [
-  { name: "Local 1", coordinates: [-33.53107140077256, -70.66385483116008] },
-  { name: "Local 2", coordinates: [-33.520897439872115, -70.65229264363981] },
+  { id: 1, name: "Local 1", coordinates: [-33.53107140077256, -70.66385483116008] },
+  { id: 2, name: "Local 2", coordinates: [-33.520897439872115, -70.65229264363981] },
   // ... más locales
 ];
 
@@ -26,6 +37,7 @@ const localIcon = L.icon({
 });
 
 onMounted(() => {
+  modalReserva.value = new Modal(infoModal.value);
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
@@ -63,6 +75,51 @@ onMounted(() => {
 });
 </script>
 <template>
+<div
+  class="modal fade"
+  ref="infoModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="infoModalLabel">Crea tu reserva</h5>
+        <button
+          type="button"
+          class="btn-close"
+          @click="modalReserva.hide()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-element" id="contenedorCalendario">
+          <p>Selecciona la fecha:</p>
+          <input type="date" v-model="selectedDate">
+        </div>
+        <div id="elementosInferiores">
+          <div class="modal-element">
+            <p>Número de personas:</p>
+            <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder=""/>
+          </div>
+          <div class="modal-element">
+            <p>Horario:</p>
+            <selectorHorario v-model="selectedTime"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="boton-crear-reserva"
+          @click="crearReserva"
+        >
+          RESERVAR
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
   <div class="map-container">
     <div id="mapid"></div>
   </div>
@@ -86,6 +143,7 @@ onMounted(() => {
             id="button-reservar"
             type="button"
             class="btn btn-lg text-center"
+            @click="modalReserva.show()"
           >
             <span class="mx-2 text-3xl">Reserva</span>
             <i class="bi bi-geo-alt-fill text-3xl"></i>
@@ -170,5 +228,65 @@ onMounted(() => {
 #button-reservar {
   background-color: #c2c2c2;
   margin-top: 3%;
+}
+
+.modal-dialog {
+  overflow-y: auto;
+}
+
+#infoModalLabel {
+  margin-left: auto;
+}
+
+.modal-body {
+  text-align: center;
+  @media screen(lg) {
+    text-align: left;
+  }
+}
+
+.modal-dialog p {
+  margin-bottom: 0;
+}
+
+.modal-dialog .text {
+  border: 1px solid black;
+}
+
+#contenedorCalendario {
+  @media screen(lg) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#contenedorCalendario p {
+  @media screen(lg) {
+    margin-right: 2%;
+  }
+}
+
+#elementosInferiores {
+  margin-top: 2%;
+  text-align: center;
+  @media screen(lg) {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+  }
+}
+
+#elementosInferiores .modal-element {
+  @media screen(lg) {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+.boton-crear-reserva {
+  border: 2px solid black;
+  width: 90%;
+}
+.modal-footer {
+  justify-content: center;
 }
 </style>
