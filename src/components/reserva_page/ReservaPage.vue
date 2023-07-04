@@ -41,6 +41,23 @@ onMounted(async () => {
         reserva.value.end_time = params.end_time ? params.end_time.toString() : reserva.value.end_time;
         reserva.value.for_smokers = params.for_smokers ? JSON.parse(params.for_smokers.toString()) : reserva.value.for_smokers;
         reserva.value.status = params.status ? params.status.toString() : reserva.value.status;
+
+        const startDate = new Date(reserva.value.start_time);
+        const endDate = new Date(reserva.value.end_time);
+
+        const mes_inicio = String(startDate.getMonth()).padStart(2, '0');
+        const dia_inicio = String(startDate.getDate()).padStart(2, '0');
+        const hora_inicio = String(startDate.getHours()).padStart(2, '0');
+        const minuto_inicio = String(startDate.getMinutes()).padStart(2, '0');
+    
+        const mes_fin = String(endDate.getMonth()).padStart(2, '0');
+        const dia_fin = String(endDate.getDate()).padStart(2, '0');
+        const hora_fin = String(endDate.getHours()).padStart(2, '0');
+        const minuto_fin = String(endDate.getMinutes()).padStart(2, '0');
+
+        reserva.value.start_time = `Fecha: ${dia_inicio}/${mes_inicio}  Hora: ${hora_inicio}:${minuto_inicio}`;
+        reserva.value.end_time = `Fecha: ${dia_fin}/${mes_fin}  Hora: ${hora_fin}:${minuto_fin}`;
+
     } catch (error) {
         console.error(error);
     }
