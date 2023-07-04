@@ -23,6 +23,7 @@ const fechaMinima = computed(() => {
 
 
 const crearReserva = () => {
+  alert("Solicitud aún no implementada")
 };
 
 const map = ref();

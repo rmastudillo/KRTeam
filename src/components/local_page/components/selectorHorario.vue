@@ -11,12 +11,12 @@ const availableMinutes = ['00', '15', '30', '45'];
     <div class="container">
       <select v-model="selectedHour" class="select">
         <option value="" disabled>Selecciona Hora</option>
-        <option v-for="hour in hours" :value="hour">{{ hour }}</option>
+        <option v-for="hour in hours" :value="hour">{{ hour }} horas</option>
       </select>
   
       <select v-model="selectedMinute" class="select">
         <option value="" disabled>Selecciona Minutos</option>
-        <option v-for="minute in availableMinutes" :value="minute">{{ minute }}</option>
+        <option v-for="minute in availableMinutes" :value="minute">{{ minute }} minutos</option>
       </select>
     </div>
   </template>
