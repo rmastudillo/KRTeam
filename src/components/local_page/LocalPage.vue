@@ -3,15 +3,24 @@ import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
 import L, { LatLngLiteral } from "leaflet";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { Modal } from "bootstrap";
 import selectorHorario from "./components/selectorHorario.vue";
 
 const modalReserva = ref();
 const infoModal = ref();
+
 const selectedDate = ref();
 const selectedTime = ref();
 const textInput = ref();
+
+const fechaMinima = computed(() => {
+  const fechaActual = new Date();
+  const mes = fechaActual.getMonth() + 1;
+  const dia = fechaActual.getDate();
+  return `${fechaActual.getFullYear()}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
+});
+
 
 const crearReserva = () => {
 };
@@ -92,31 +101,33 @@ onMounted(() => {
           aria-label="Close"
         ></button>
       </div>
-      <div class="modal-body">
-        <div class="modal-element" id="contenedorCalendario">
-          <p>Selecciona la fecha:</p>
-          <input type="date" v-model="selectedDate">
+      <form @submit="crearReserva">
+        <div class="modal-body">
+            <div class="modal-element" id="contenedorCalendario">
+              <p>Selecciona la fecha:</p>
+              <input type="date" v-model="selectedDate" :min="fechaMinima" required>
+            </div>
+            <div id="elementosInferiores">
+              <div class="modal-element">
+                <p>Número de personas:</p>
+                <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder="" required/>
+              </div>
+              <div class="modal-element">
+                <p>Horario:</p>
+                <selectorHorario v-model="selectedTime" required/>
+              </div>
+            </div>
+          
         </div>
-        <div id="elementosInferiores">
-          <div class="modal-element">
-            <p>Número de personas:</p>
-            <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder=""/>
-          </div>
-          <div class="modal-element">
-            <p>Horario:</p>
-            <selectorHorario v-model="selectedTime"/>
-          </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="boton-crear-reserva"
+          >
+            RESERVAR
+          </button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="boton-crear-reserva"
-          @click="crearReserva"
-        >
-          RESERVAR
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
