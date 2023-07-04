@@ -23,6 +23,7 @@ const startMinute = ref<string>('');
 const endHour = ref<string>('');
 const endMinute = ref<string>('');
 const textInput = ref();
+const fumadores = ref<boolean>();
 const errors = ref<Errors>({});
 
 const fechaMinima = computed(() => {
@@ -192,6 +193,10 @@ onMounted(() => {
               </div>
             </div>
           <span v-if="errors.duracion" class="error-message">{{ errors.duracion }}</span>
+          <div class="modal-element" id="contenedorFumadores">
+            <p>Mesa para fumadores?</p>
+            <input type="checkbox" v-model="fumadores"/>
+          </div>
           
         </div>
         <div class="modal-footer">
@@ -381,6 +386,22 @@ onMounted(() => {
     margin-right: 5%;
   }
 }
+
+#contenedorFumadores {
+  margin-top: 2%;
+  @media screen(lg) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#contenedorFumadores p {
+  @media screen(lg) {
+    margin-right: 1%;
+  }
+}
+
+
 
 .boton-crear-reserva {
   border: 2px solid black;
