@@ -12,9 +12,11 @@ const reserva = ref({
     status: 'Pending',
 });
 
-const { params } = useRoute();
-const id = params.id;
 const router = useRouter();
+
+const route = useRoute();
+const params = route.query;
+const id = params.id;
 
 
 // onMounted(async () => {
@@ -32,13 +34,13 @@ const router = useRouter();
 
 onMounted(async () => {
     try {
-        reserva.value.local = Array.isArray(params.local) ? params.local[0].toString() : params.local.toString();
-        reserva.value.mesa = Array.isArray(params.mesa) ? parseInt(params.mesa[0]) : parseInt(params.mesa);
-        reserva.value.people = Array.isArray(params.people) ? parseInt(params.people[0]) : parseInt(params.people);
-        reserva.value.start_time = Array.isArray(params.start_time) ? params.start_time[0].toString() : params.start_time.toString();
-        reserva.value.end_time = Array.isArray(params.end_time) ? params.end_time[0].toString() : params.end_time.toString();
-        reserva.value.for_smokers = Array.isArray(params.for_smokers) ? Boolean(params.for_smokers[0]) : Boolean(params.for_smokers);
-        reserva.value.status = Array.isArray(params.status) ? params.status[0].toString() : params.status.toString();
+        reserva.value.local = params.local.toString();
+        reserva.value.mesa = parseInt(params.mesa);
+        reserva.value.people = parseInt(params.people);
+        reserva.value.start_time = params.start_time.toString();
+        reserva.value.end_time = params.end_time.toString();
+        reserva.value.for_smokers = JSON.parse(params.for_smokers);
+        reserva.value.status = params.status.toString();
     } catch (error) {
         console.error(error);
     }
@@ -110,7 +112,7 @@ const cancelarReserva = async () => {
         </div>
         <div class="datos">
             <h4>Para fumadores:</h4>
-            <p> {{ reserva.end_time ? 'Si' : 'No' }}   </p>
+            <p> {{ reserva.for_smokers ? 'Si' : 'No' }}   </p>
         </div>
         <div class="datos">
             <h4>Estado de la solicitud:</h4>
