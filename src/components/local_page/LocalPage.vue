@@ -5,14 +5,25 @@ import imggps from "@/assets/img/ubi1.png";
 import L, { LatLngLiteral } from "leaflet";
 import { onMounted, ref, computed } from "vue";
 import { Modal } from "bootstrap";
-import selectorHorario from "./components/selectorHorario.vue";
+import { useRouter } from "vue-router";
+
+
+const router = useRouter();
 
 const modalReserva = ref();
 const infoModal = ref();
 
+interface Errors {
+  duracion?: string;
+}
+
 const selectedDate = ref();
-const selectedTime = ref();
+const startHour = ref<string>('');
+const startMinute = ref<string>('');
+const endHour = ref<string>('');
+const endMinute = ref<string>('');
 const textInput = ref();
+const errors = ref<Errors>({});
 
 const fechaMinima = computed(() => {
   const fechaActual = new Date();
@@ -21,9 +32,46 @@ const fechaMinima = computed(() => {
   return `${fechaActual.getFullYear()}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
 });
 
+const hours = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
+const availableMinutes = ['00', '15', '30', '45'];
 
-const crearReserva = () => {
-  alert("Solicitud aún no implementada")
+
+const verificarDuracion = (startHour: number, startMinute: number, endHour: number, endMinute: number) => {
+  let totalMinutos = 0;
+  // Le sumo los minutos dada la diferencia de horas
+  if (endHour - startHour > 0) {
+    totalMinutos += (endHour - startHour) * 60
+  } else {
+    totalMinutos += (endHour - (startHour - 24)) * 60
+  }
+  // Le sumo los minutos dada la diferencia de minutos
+  totalMinutos += (endMinute - startMinute)
+
+  if (totalMinutos > 3 * 60) {
+    // No más de 3 horas
+    return false
+
+  } else if (totalMinutos < 30) {
+    // No menos de 30 min
+    return false
+  }
+
+  return true
+}
+
+
+const crearReserva = (event: any) => {
+  event.preventDefault();
+  errors.value = {};
+  
+  if (!verificarDuracion(parseInt(startHour.value), parseInt(startMinute.value), parseInt(endHour.value), parseInt(endMinute.value))){
+    errors.value.duracion = 'La duración de la reserva debe ser entre 30 minutos y 3 horas';
+  }
+
+  if (Object.keys(errors.value).length === 0) {
+    alert("Solicitud aún no implementada")
+    window.location.reload();
+  }
 };
 
 const map = ref();
@@ -108,16 +156,42 @@ onMounted(() => {
               <p>Selecciona la fecha:</p>
               <input type="date" v-model="selectedDate" :min="fechaMinima" required>
             </div>
+            <div class="modal-element" id="contenedorPersonas">
+              <p>Número de personas:</p>
+              <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder="" required/>
+            </div>
             <div id="elementosInferiores">
               <div class="modal-element">
-                <p>Número de personas:</p>
-                <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder="" required/>
+                <p>Horario Inicio:</p>
+                <div class="container">
+                  <select v-model="startHour" class="select" required>
+                    <option value="" disabled>Selecciona Hora</option>
+                    <option v-for="hour in hours" :value="hour">{{ hour }} horas</option>
+                  </select>
+              
+                  <select v-model="startMinute" class="select" required>
+                    <option value="" disabled>Selecciona Minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">{{ minute }} minutos</option>
+                  </select>
+                </div>
               </div>
+
               <div class="modal-element">
-                <p>Horario:</p>
-                <selectorHorario v-model="selectedTime" required/>
+                <p>Horario Finalización:</p>
+                <div class="container">
+                  <select v-model="endHour" class="select" required>
+                    <option value="" disabled>Selecciona Hora</option>
+                    <option v-for="hour in hours" :value="hour">{{ hour }} horas</option>
+                  </select>
+              
+                  <select v-model="endMinute" class="select" required>
+                    <option value="" disabled>Selecciona Minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">{{ minute }} minutos</option>
+                  </select>
+                </div>
               </div>
             </div>
+          <span v-if="errors.duracion" class="error-message">{{ errors.duracion }}</span>
           
         </div>
         <div class="modal-footer">
@@ -278,6 +352,20 @@ onMounted(() => {
   }
 }
 
+#contenedorPersonas {
+  margin-top: 2%;
+  @media screen(lg) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#contenedorPersonas p {
+  @media screen(lg) {
+    margin-right: 2%;
+  }
+}
+
 #elementosInferiores {
   margin-top: 2%;
   text-align: center;
@@ -300,5 +388,20 @@ onMounted(() => {
 }
 .modal-footer {
   justify-content: center;
+}
+
+.container {
+  position: relative;
+  height: 50%; /* Altura máxima deseada para el contenedor */
+  overflow-y: auto;
+  @media screen(lg) {
+    display: flex;
+  }
+}
+
+.select {
+  overflow-y: auto;
+  width: 150px;
+  border: 1px solid black;
 }
 </style>
