@@ -34,13 +34,13 @@ const id = params.id;
 
 onMounted(async () => {
     try {
-        reserva.value.local = params.local.toString();
-        reserva.value.mesa = parseInt(params.mesa);
-        reserva.value.people = parseInt(params.people);
-        reserva.value.start_time = params.start_time.toString();
-        reserva.value.end_time = params.end_time.toString();
-        reserva.value.for_smokers = JSON.parse(params.for_smokers);
-        reserva.value.status = params.status.toString();
+        reserva.value.local = params.local ? params.local.toString() : reserva.value.local;
+        reserva.value.mesa = params.mesa ? parseInt(params.mesa.toString(), 10) : reserva.value.mesa;
+        reserva.value.people = params.people ? parseInt(params.people.toString(), 10) : reserva.value.people;
+        reserva.value.start_time = params.start_time ? params.start_time.toString() : reserva.value.start_time;
+        reserva.value.end_time = params.end_time ? params.end_time.toString() : reserva.value.end_time;
+        reserva.value.for_smokers = params.for_smokers ? JSON.parse(params.for_smokers.toString()) : reserva.value.for_smokers;
+        reserva.value.status = params.status ? params.status.toString() : reserva.value.status;
     } catch (error) {
         console.error(error);
     }
