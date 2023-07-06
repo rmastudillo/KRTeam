@@ -33,11 +33,11 @@ const logoutAndRedirect = () => {
         <router-link :to="{ name: 'Home' }">
           <span class="link">Home</span>
         </router-link>
+        <router-link :to="{ name: 'Local' }">
+          <span class="link">Ver locales</span>
+        </router-link>
         <!-- Mostrar solo si el usuario está logeado -->
         <div v-if="userIsLogged" class="flex flex-row flex-nowrap gap-4">
-          <router-link :to="{ name: 'Local' }">
-            <span class="link">Ver locales</span>
-          </router-link>
           <div v-if="!userIsAdminRestobar">
             <router-link :to="{ name: 'UserProfile' }">
               <span class="link">Perfil</span>
