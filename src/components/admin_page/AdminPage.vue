@@ -62,7 +62,7 @@ const fields2 = [
 <template>
 <h1 id="titulo">ADMINISTRADOR</h1>
 
-<div id="tablaLocales" class="containerTabla">
+<div id="tablaLocales">
     <h2 class="nombreTabla">Locales Activos</h2>
     <hr>
     <div class="accionesTabla">
@@ -71,30 +71,32 @@ const fields2 = [
         <div class="accion"><button>Refresh</button></div>
         <div class="accion"><button>Export users</button></div>
     </div>
-    <table class="tabla table">
-    <thead>
-        <tr>
-        <!-- loop through each value of the fields to get the table header -->
-        <th  v-for="field in fields1" :key='field' > 
-            {{field}}
-        </th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Loop through the list get the each student data -->
-        <tr v-for="item in locales" :key='item.id'>
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.region }}</td>
-        <td>{{ item.commune }}</td>
-        <td>{{ item.address }}</td>
-        <td>{{ item.unit_number }}</td>
-        <td><button>ICONO EDITAR</button></td>
-        </tr>
-    </tbody>
-    </table>
+    <div class="containerTabla">
+      <table class="tabla table">
+      <thead>
+          <tr>
+          <!-- loop through each value of the fields to get the table header -->
+          <th  v-for="field in fields1" :key='field' > 
+              {{field}}
+          </th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Loop through the list get the each student data -->
+          <tr v-for="item in locales" :key='item.id'>
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.region }}</td>
+          <td>{{ item.commune }}</td>
+          <td>{{ item.address }}</td>
+          <td>{{ item.unit_number }}</td>
+          <td><button>ICONO EDITAR</button></td>
+          </tr>
+      </tbody>
+      </table>
+    </div>
 </div>
-<div id="tablaReservas" class="containerTabla">
+<div id="tablaReservas">
     <h2 class="nombreTabla">Solicitudes de local</h2>
     <hr>
     <div class="accionesTabla">
@@ -102,34 +104,36 @@ const fields2 = [
         <div class="accion"><button>Refresh</button></div>
         <div class="accion"><button>Export solicitudes</button></div>
     </div>
-    <table class="tabla table">
-    <thead>
-        <tr>
-        <!-- loop through each value of the fields to get the table header -->
-        <th  v-for="field in fields2" :key='field' > 
-            {{field}}
-        </th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Loop through the list get the each student data -->
-        <tr v-for="item in solicitudes" :key='item.id'>
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.region }}</td>
-        <td>{{ item.commune }}</td>
-        <td>{{ item.address }}</td>
-        <td>{{ item.unit_number }}</td>
-        <td>{{ item.owner_email }}</td>
-        <td>{{ item.status }}</td>
-        <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
-        </tr>
-    </tbody>
-    </table>
+    <div class="containerTabla">
+      <table class="tabla table">
+      <thead>
+          <tr>
+          <!-- loop through each value of the fields to get the table header -->
+          <th  v-for="field in fields2" :key='field' > 
+              {{field}}
+          </th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Loop through the list get the each student data -->
+          <tr v-for="item in solicitudes" :key='item.id'>
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.region }}</td>
+          <td>{{ item.commune }}</td>
+          <td>{{ item.address }}</td>
+          <td>{{ item.unit_number }}</td>
+          <td>{{ item.owner_email }}</td>
+          <td>{{ item.status }}</td>
+          <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+          </tr>
+      </tbody>
+      </table>
+    </div>
 </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 #titulo {
     background: #72caba;
     padding: 1%;
@@ -147,6 +151,9 @@ const fields2 = [
     margin-top: 1%;
     margin-left: 2%;
     margin-right: 2%;
+    @media screen(lg) {
+      font-size: 20px;
+    }
 }
 .accion {
     margin-right: 2%;
@@ -154,13 +161,21 @@ const fields2 = [
 
 .tabla {
     margin-top: 1%;
-    margin-left: 0.5%;
-    margin-right: 0.5%;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
+    width: 95%;
+    border-collapse: collapse;
+    font-size: 15px;
+    @media screen(lg) {
+      font-size: 18px;
+    }
 }
 
 .containerTabla {
     margin-bottom: 10%;
+    width: 100%;
+    overflow-x: auto;
 }
 
 </style>
