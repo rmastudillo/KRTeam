@@ -1,7 +1,11 @@
 <script lang="ts" setup>
+import { client } from "@/api/client";
+import { useUserStore } from "@/stores/userStore";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-
+const router = useRouter();
+const userStore = useUserStore();
 let name = ref("");
 let email = ref("");
 let password = ref("");
@@ -13,30 +17,31 @@ const register = async () => {
     return;
   }
 
-  const response = await fetch(
-    `http://35.232.169.75/api/v1/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email.value,
-        full_name: name.value,
-        password: password.value,
-      }),
+  try {
+    const response = await client.post(
+      `/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    userStore.setToken(response.data.access_token);
+    userStore.setIsAppAdmin(response.data.is_superuser);
+    userStore.setIsRestobarAdmin(response.data.is_restobar_owner);
+    userStore.setIsLogged(true);
+    alert("Registro exitoso!");
+    if (response.data.is_superuser) router.push({ name: "Admin" });
+    else {
+      router.push({ name: "Local" });
     }
-  );
-
-  if (!response.ok) {
-    alert("Hubo un problema con el registro");
-  } else {
+  } catch {
     alert("Registro exitoso!");
   }
 };
 </script>
 <template>
-  <section class="vh-min-100" style="background-color: #eee">
+  <section class="vh-min-100 w-full" style="background-color: #eee">
     <div id="container-register" class="container h-min-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12 col-xl-11">
@@ -47,7 +52,6 @@ const register = async () => {
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">
                     Sign up
                   </p>
-                  
 
                   <form class="mx-1 mx-md-4">
                     <div class="d-flex flex-row align-items-center mb-4">
@@ -108,15 +112,14 @@ const register = async () => {
                           >Repite tu Contraseña</label
                         >
                       </div>
-                      
                     </div>
 
                     <div
-                      class="d-flex justify-content-center mx-4 mb-3 mb-lg-4"
+                      class="d-flex justify-content-center mx-4 mb-3 mb-lg-4 gap-2"
                     >
-                    <p class="small fw-bold mt-2 pt-1 mb-0">
+                      <p class="small fw-bold mt-2 pt-1 mb-0">
                         ¿Tienes cuenta?
-                        <router-link :to="{name: 'Login'}">
+                        <router-link :to="{ name: 'Login' }">
                           <a href="#!" class="link-danger">Iniciar Sesión</a>
                         </router-link>
                       </p>
