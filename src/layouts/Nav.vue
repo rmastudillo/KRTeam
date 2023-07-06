@@ -13,6 +13,7 @@ const isActive = (path: string) => path === activeRoute.value;
 const userStore = storeToRefs(useUserStore());
 const userIsLogged = userStore.isLogged;
 const userIsAppAdmin = userStore.isAppAdmin;
+const userIsAdminRestobar = userStore.isRestobarAdmin;
 
 const logoutAndRedirect = () => {
   useUserStore().logout();
@@ -23,32 +24,38 @@ const logoutAndRedirect = () => {
   <nav class="navbar flex flex-row justify-between">
     <div class="container">
       <router-link
-        :to="
-          userIsLogged
-            ? userIsAppAdmin
-              ? { name: 'Admin' }
-              : { name: 'Local' }
-            : { name: 'Home' }
-        "
+        :to="{ name: 'Home' }"
         class="navbar-brand d-flex align-items-center text-decoration-none"
       >
         <img :src="krteamlogo" alt="logo" />
       </router-link>
       <div class="flex flex-row flex-nowrap gap-4">
-        <router-link
-          :to="
-            userIsLogged
-              ? userIsAppAdmin
-                ? { name: 'Admin' }
-                : { name: 'Local' }
-              : { name: 'Home' }
-          "
-        >
+        <router-link :to="{ name: 'Home' }">
           <span class="link">Home</span>
         </router-link>
         <!-- Mostrar solo si el usuario está logeado -->
-        <div class="link" v-if="userIsLogged" @click="logoutAndRedirect">
-          Logout
+        <div v-if="userIsLogged" class="flex flex-row flex-nowrap gap-4">
+          <router-link :to="{ name: 'Local' }">
+            <span class="link">Ver locales</span>
+          </router-link>
+          <div v-if="!userIsAdminRestobar">
+            <router-link :to="{ name: 'UserProfile' }">
+              <span class="link">Perfil</span>
+            </router-link>
+          </div>
+          <div v-else>
+            <router-link :to="{ name: 'AdminRestobar' }">
+              <span class="link">Ver reservas</span>
+            </router-link>
+          </div>
+          <div v-if="userIsAppAdmin">
+            <router-link :to="{ name: 'Admin' }">
+              <span class="link">Admin</span>
+            </router-link>
+          </div>
+          <div class="link" @click="logoutAndRedirect">
+            Logout
+          </div>
         </div>
         <template v-else>
           <!-- Mostrar solo si el usuario NO está logeado -->
