@@ -33,38 +33,41 @@ const fields = [
 <template>
     <h1 id="titulo">ADMINISTRADOR RESTOBAR</h1>
     
-    <div id="tablaReservas" class="containerTabla">
+    <div id="tablaReservas">
         <h2 class="nombreTabla">Reservas</h2>
         <hr>
         <div class="accionesTabla">
             <div class="accion"><button>Refresh</button></div>
             <div class="accion"><button>Export reservas</button></div>
         </div>
-        <table class="tabla table">
-        <thead>
-            <tr>
-            <!-- loop through each value of the fields to get the table header -->
-            <th  v-for="field in fields" :key='field' > 
-                {{field}}
-            </th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Loop through the list get the each student data -->
-            <tr v-for="item in reservas" :key='item.id'>
-            <td>{{ item.id }}</td>
-            <td>{{ item.table }}</td>
-            <td>{{ item.people }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ item.time }}</td>
-            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
-            </tr>
-        </tbody>
-        </table>
+        <div class="containerTabla">
+            <table class="tabla table">
+            <thead>
+                <tr>
+                <!-- loop through each value of the fields to get the table header -->
+                <th  v-for="field in fields" :key='field' > 
+                    {{field}}
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the list get the each student data -->
+                <tr v-for="item in reservas" :key='item.id'>
+                <td>{{ item.id }}</td>
+                <td>{{ item.table }}</td>
+                <td>{{ item.people }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.time }}</td>
+                <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        
     </div>
     </template>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 #titulo {
     background: #72caba;
     padding: 1%;
@@ -82,6 +85,9 @@ const fields = [
     margin-top: 1%;
     margin-left: 2%;
     margin-right: 2%;
+    @media screen(lg) {
+      font-size: 20px;
+    }
 }
 .accion {
     margin-right: 2%;
@@ -89,9 +95,15 @@ const fields = [
 
 .tabla {
     margin-top: 1%;
-    margin-left: 0.5%;
-    margin-right: 0.5%;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
+    width: 95%;
+    border-collapse: collapse;
+    font-size: 15px;
+    @media screen(lg) {
+      font-size: 18px;
+    }
 }
 
 .containerTabla {

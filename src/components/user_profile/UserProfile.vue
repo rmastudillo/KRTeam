@@ -1,94 +1,187 @@
 <script lang="ts" setup>
-    import { ref, onMounted, onUnmounted } from "vue";
-    import { useRouter } from "vue-router";
+import { table } from "console";
+import { ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 
-    const usuario = ref({ 
-        email: 'UserEmail',
-        full_name: 'UserName',
-        is_active: false,
-        is_superuser: false,
-        is_restobar_owner: false,
-        id: 0,
-        restobars: [],
-    });
+const usuario = ref({ 
+    email: 'UserEmail',
+    full_name: 'UserName',
+    is_active: false,
+    is_superuser: false,
+    is_restobar_owner: false,
+    id: 0,
+    restobars: [],
+});
 
-    const router = useRouter();
+const reservas = ref<Array<{ 
+    people: number,
+    start_time: Date,
+    end_time: Date,
+    for_smokers: boolean,
+    id: number,
+    user_id: number,
+    table_id: number,
+    restobar_id: number,
+    status: string,
+}>>([]);
 
-    onMounted(async () => {
-        try {
-            const response = await fetch('http://35.232.169.75/api/v1/users/me');
-            if (response.ok) {
-              usuario.value = await response.json();
-            } else {
-              console.error('No se pudo obtener la información del usuario');
-            }
-        } catch (error) {
-            console.error('Error tratando de obtener la información del usuario:', error);
+const router = useRouter();
+
+onMounted(async () => {
+    try {
+        const response = await fetch('http://35.232.169.75/api/v1/users/me');
+        if (response.ok) {
+            usuario.value = await response.json();
+        } else {
+            console.error('No se pudo obtener la información del usuario');
+        }
+    } catch (error) {
+        console.error('Error tratando de obtener la información del usuario:', error);
+    }
+});
+
+onMounted(async () => {
+    try {
+        const response = await fetch('http://35.232.169.75/api/v1/reservations/user/me');
+        if (response.ok) {
+            reservas.value = await response.json();
+        } else {
+            console.error('No se pudo obtener la información de las reservas');
+            // Esto en caso de que no se logre obtener los datos para probar la página (SE DEBE BORRAR)
+            reservas.value.push({
+                people: 2,
+                start_time: new Date('2023-07-04'),
+                end_time: new Date('2023-07-05'),
+                for_smokers: true,
+                id: 0,
+                user_id: 0,
+                table_id: 5,
+                restobar_id: 0,
+                status: 'Pendiente',
+            })
+        }
+    } catch (error) {
+        console.error('Error tratando de obtener la información de las reservas:', error);
+    }
+});
+
+const fields = [
+      'Local', 'Fecha y hora', 'Mesa', ' '
+    ]
+
+onUnmounted(() => {
+    usuario.value = { 
+    email: 'UserEmail',
+    full_name: 'UserName',
+    is_active: false,
+    is_superuser: false,
+    is_restobar_owner: false,
+    id: 0,
+    restobars: [],
+}
+});
+
+const HandleButtonVerReserva = (id: number, local: string, mesa: number, people: number, start_time: string, end_time: string, for_smokers: boolean, status: string) => {
+    // Mostrar modal con confirmación
+    verReserva(id, local, mesa, people, start_time, end_time, for_smokers, status)
+}
+
+const verReserva = (id: number, local: string, mesa: number, people: number, start_time: string, end_time: string, for_smokers: boolean, status: string) => {
+    // Hacer el fetch a la API
+    const id_s = id.toString();
+    const local_s = local.toString()
+    const fumador = for_smokers.toString();
+    router.push({
+        path: '/reserva',
+        query: {
+            id: id_s,
+            local: local,
+            mesa: mesa,
+            people: people,
+            start_time: start_time,
+            end_time: end_time,
+            for_smokers: fumador,
+            status: status
         }
     });
+}
 
-    onUnmounted(() => {
-        usuario.value = { 
-        email: 'UserEmail',
-        full_name: 'UserName',
-        is_active: false,
-        is_superuser: false,
-        is_restobar_owner: false,
-        id: 0,
-        restobars: [],
-    }
-    });
+const editarPerfil = () => {
+    // Hacer el fetch a la API
+}
 
-    const editarPerfil = () => {
-        // Hacer el fetch a la API
-    }
+const HandleButtonBorrarCuenta = () => {
+    // Mostrar modal con confirmación
+    borrarCuenta()
+}
 
-    const HandleButtonBorrarCuenta = () => {
-        // Mostrar modal con confirmación
-        borrarCuenta()
-    }
-
-    const borrarCuenta = async () => {
-        try {
-            const response = await fetch('http://35.232.169.75/api/v1/users/me', {
-            method: 'DELETE',
-            });
-            if (response.ok) {
-              console.log('Se ha eliminado la cuenta correctamente');
-              router.push('/')
-            } else {
-              console.error('No se pudo eliminar la cuenta');
-            }
-        } catch (error) {
-            console.error('Error tratando de borrar la cuenta:', error);
+const borrarCuenta = async () => {
+    try {
+        const response = await fetch('http://35.232.169.75/api/v1/users/me', {
+        method: 'DELETE',
+        });
+        if (response.ok) {
+            console.log('Se ha eliminado la cuenta correctamente');
+            router.push('/')
+        } else {
+            console.error('No se pudo eliminar la cuenta');
         }
-    };
+    } catch (error) {
+        console.error('Error tratando de borrar la cuenta:', error);
+    }
+};
 
 </script>
 
 <template>
-    <div>
-      <h1 class="titulo"> Perfíl </h1>
-      <div id="infobox">
-        <!-- <div class="datos">
-            <h4>Usuario:</h4>
-            <p> {{usuario}}   </p>
-        </div> -->
-        <div class="datos">
-            <h4>Nombre Completo:</h4>
-            <p> {{ usuario.full_name }}   </p>
-        </div>
-        <div class="datos">
-            <h4>Email:</h4>
-            <p> {{ usuario.email }}   </p>
-        </div>
-        <div id="botones">
-            <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
-            <button class="hidden" @click="editarPerfil">Editar perfíl</button> 
-            <button @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
-        </div>
-      </div>
+<div>
+    <h1 class="titulo"> Perfíl </h1>
+    <div id="infobox">
+    <!-- <div class="datos">
+        <h4>Usuario:</h4>
+        <p> {{usuario}}   </p>
+    </div> -->
+    <div class="datos">
+        <h4>Nombre Completo:</h4>
+        <p> {{ usuario.full_name }}   </p>
     </div>
+    <div class="datos">
+        <h4>Email:</h4>
+        <p> {{ usuario.email }}   </p>
+    </div>
+    <div class="datos">
+        <div id="tablaLocales" class="containerTabla">
+            <h2 class="nombreTabla">Reservas activas:</h2>
+            <hr>
+            <table class="tabla table" v-if="reservas.length !== 0">
+            <thead>
+                <tr>
+                <!-- loop through each value of the fields to get the table header -->
+                <th  v-for="field in fields" :key='field' > 
+                    {{field}}
+                </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the list get the each student data -->
+                <tr v-for="item in reservas" :key='item.id'>
+                <td>{{ item.restobar_id }}</td>
+                <td>{{ item.start_time }}</td>
+                <td>{{ item.table_id }}</td>
+                <td><button @click="HandleButtonVerReserva(item.id, item.restobar_id.toString(), item.table_id, item.people, item.start_time.toString(), item.end_time.toString(), item.for_smokers, item.status)">Más información</button></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="botones">
+        <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
+        <button class="hidden" @click="editarPerfil">Editar perfíl</button> 
+        <button @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
+    </div>
+    </div>
+</div>
 </template>
 
 <style lang="css" scoped>
@@ -117,6 +210,9 @@
 #infobox p {
     margin: 2%;
     color: white;
+    @media screen(lg) {
+        font-size: 22px;
+    }
 }
 .datos {
     margin: 5%;
