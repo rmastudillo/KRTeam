@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import Register from '../../src/components/register/RegisterPage.vue'; 
 
-// Simula enrutador vue 
+// Simula enrutador vue q
 jest.mock('vue-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
