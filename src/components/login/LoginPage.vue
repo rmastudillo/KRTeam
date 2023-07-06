@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import { client } from "@/api/client";
+import { useUserStore } from "@/stores/userStore";
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
+const userStore = useUserStore();
 let email = ref("");
 let password = ref("");
 
@@ -16,28 +19,33 @@ const login = async () => {
   data.append("scope", "");
   data.append("client_id", "");
   data.append("client_secret", "");
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: data,
-  });
-
-  if (!response.ok) {
+  try {
+    const response = await client.post("/login", data, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    const responseData = response.data;
+    userStore.setToken(responseData.access_token);
+    userStore.setIsAppAdmin(responseData.is_superuser);
+    userStore.setIsRestobarAdmin(responseData.is_restobar_owner);
+    userStore.setIsLogged(true);
+    alert("Inicio de sesión exitoso!");
+    if (responseData.is_superuser) router.push({ name: "Admin" });
+    else {
+      router.push({ name: "Local" });
+    }
+  } catch {
     alert(
       "Hubo un problema con el inicio de sesión porfavor verifica los datos ingresados"
     );
-  } else {
-    alert("Inicio de sesión exitoso!");
-    router.push({ name: 'Local' });
   }
 };
 </script>
 <template>
-  <section class="vh-min-100">
+  <section
+    class="h-full w-full d-flex justify-content-center align-items-center"
+  >
     <div class="container-fluid h-custom">
       <div
         class="row d-flex justify-content-center align-items-center h-min-100"
@@ -98,7 +106,7 @@ const login = async () => {
               </button>
               <p class="small fw-bold mt-2 pt-1 mb-0">
                 ¿No tienes cuenta?
-                <router-link :to="{name: 'Register'}">
+                <router-link :to="{ name: 'Register' }">
                   <a href="#!" class="link-danger">Registrate</a>
                 </router-link>
               </p>

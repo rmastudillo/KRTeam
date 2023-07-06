@@ -215,7 +215,10 @@ onMounted(() => {
     <div id="mapid"></div>
   </div>
 
-  <div id="container-local" class="flex flex-col lg:flex-row lg:max-h-min">
+  <div
+    id="container-local"
+    class="flex flex-col lg:flex-row lg:max-h-min w-full"
+  >
     <div id="container-img" class="inline-flex justify-center">
       <img :src="imglocal" alt="My SVG Image" />
     </div>
@@ -252,6 +255,7 @@ onMounted(() => {
   align-items: center;
   margin: 15px;
   height: auto;
+  width: 100%;
 }
 
 #mapid {

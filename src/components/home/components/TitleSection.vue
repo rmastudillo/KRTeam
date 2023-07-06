@@ -48,7 +48,7 @@ const redirigirMapa = () => {
       ratos en tiempos de espera y reserva con nosotros.
     </h3>
   </div>
-  <div class="flex flex-col lg:flex-row lg:max-h-min">
+  <div class="flex flex-col lg:flex-row lg:max-h-min w-full">
     <div class="inline-flex justify-center">
       <img :src="restobarLanding" alt="My SVG Image" />
     </div>
@@ -65,7 +65,6 @@ const redirigirMapa = () => {
       </h3>
     </div>
   </div>
-  <div class="bg-white w-full h-[10vh]"></div>
   <div class="form-main-container">
     <h2 class="form-title">
       ¿Te interesa usar ReservApp para potenciar las visitas a tu
@@ -89,12 +88,12 @@ const redirigirMapa = () => {
           <label :for="campo.id">{{ campo.label }}</label>
         </div>
       </div>
-      <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%]">
+      <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%] mt-10">
         <button
           type="submit"
-          class="btn bg-white btn-lg text-center w-full lg:w-1/2"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          <span class="mx-2 text-3xl">Enviar</span>
+          <span class="mx-3 text-2xl">Enviar</span>
         </button>
       </div>
     </form>
@@ -152,6 +151,7 @@ const redirigirMapa = () => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
 @media screen and (min-width: 1024px) {
@@ -238,7 +238,8 @@ const redirigirMapa = () => {
   gap: 1rem;
   padding-inline: 5%;
   padding-block: 10%;
-  background-color: #72caba;
+  background-color: #fff;
+  width: 100%;
 }
 
 @media screen and (min-width: 1024px) {
@@ -254,7 +255,7 @@ const redirigirMapa = () => {
   font-size: 30px;
   line-height: 35px;
   text-align: center;
-  color: #ffffff;
+  color: #000;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -272,7 +273,7 @@ const redirigirMapa = () => {
   font-size: 20px;
   line-height: 25px;
   text-align: center;
-  color: #ffffff;
+  color: #000;
 }
 
 @media screen and (min-width: 1024px) {
