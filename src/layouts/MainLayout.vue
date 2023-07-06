@@ -7,7 +7,7 @@ import { RouterView } from "vue-router";
   <div class="min-h-screen flex flex-col">
     <Nav />
     <main
-      class="mb-0 flex-grow-1 w-full h-full d-flex flex-col justify-content-center align-items-center"
+      class="mb-0 flex-grow-1 w-full h-full d-flex flex-col align-items-center"
     >
       <RouterView />
     </main>
