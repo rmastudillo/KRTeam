@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
 const campos = ref([
   { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
@@ -15,6 +16,12 @@ const handleSubmit = (e: any) => {
   e.preventDefault();
   console.log(e);
 };
+
+const router = useRouter();
+
+const redirigirMapa = () => {
+  router.push('/local');
+};
 </script>
 <template>
   <div class="title-container">
@@ -26,7 +33,7 @@ const handleSubmit = (e: any) => {
       reserva con nosotros en sencillo pasos, tan solo regístrate, busca tu
       restaurant, reserva y listo!
     </h2>
-    <button type="button" class="btn bg-white btn-lg text-center">
+    <button type="button" class="btn bg-white btn-lg text-center" @click="redirigirMapa">
       <span class="mx-2 text-3xl">Reserva</span>
       <i class="bi bi-geo-alt-fill text-3xl" />
     </button>
@@ -61,7 +68,7 @@ const handleSubmit = (e: any) => {
   <div class="bg-white w-full h-[10vh]"></div>
   <div class="form-main-container">
     <h2 class="form-title">
-      ¿Te interesa usar ReservApppara para potenciar las visitas a tu
+      ¿Te interesa usar ReservApp para potenciar las visitas a tu
       restaurante?
     </h2>
     <h3 class="form-subtitle">
