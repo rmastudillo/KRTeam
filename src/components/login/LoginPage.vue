@@ -44,11 +44,13 @@ const login = async () => {
 </script>
 <template>
   <section
-    class="h-full w-full d-flex justify-content-center align-items-center"
+    class="h-screen w-full d-flex justify-content-center align-items-center"
   >
-    <div class="container-fluid h-custom">
+    <div
+      class="container-fluid h-custom d-flex justify-content-center align-items-center w-full"
+    >
       <div
-        class="row d-flex justify-content-center align-items-center h-min-100"
+        class="row d-flex justify-content-center align-items-center h-min-100 w-full"
       >
         <div class="col-md-9 col-lg-6 col-xl-5">
           <img
