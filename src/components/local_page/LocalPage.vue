@@ -9,7 +9,6 @@ import { useRouter } from "vue-router";
 
 
 const router = useRouter();
-
 const modalReserva = ref();
 const infoModal = ref();
 
@@ -75,7 +74,23 @@ const crearReserva = (event: any) => {
   }
 };
 
+
+
+
 const map = ref();
+const solicitudes = ref<
+  Array<{
+    name: string;
+    owner_email: string;
+    address: string;
+    unit_number: number;
+    commune: string;
+    region: string;
+    status: string;
+    id: number;
+  }>
+>([]);
+
 
 // Locales coordenadas
 const locales = [
@@ -83,6 +98,51 @@ const locales = [
   { id: 2, name: "Local 2", coordinates: [-33.520897439872115, -70.65229264363981] },
   // ... más locales
 ];
+
+
+const locales2 = [{
+    name: "Sandwichería STEAKS BURGER",
+    address: "Tobalaba 13949",
+    unit_number: 0,
+    commune: "Peñalolén",
+    region: "Metropolitana",
+    menu_url: "",
+    id: 1,
+    owner_id: 3,
+    tables: [],
+    coordinates : []
+},
+  
+{
+    name: "Sandwichería STEAKS BURGER",
+    address: "Tobalaba 1300",
+    unit_number: 0,
+    commune: "Peñalolén",
+    region: "Metropolitana",
+    menu_url: "",
+    id: 2,
+    owner_id: 3,
+    tables: [],
+    coordinates : []
+  }
+
+];
+
+let fetches = locales2.map(local => {
+  const fullAddress = `${local.address}, ${local.commune}, ${local.region}`;
+
+  return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json`)
+      .then(response => response.json())
+      .then(data => {
+          if (data && data.length > 0) {
+              local.coordinates[0] = parseFloat(data[0].lat);
+              local.coordinates[1]= parseFloat(data[0].lon);
+          }
+      });
+});
+
+
+
 
 // Define los iconos personalizados
 const gpsIcon = L.icon({
@@ -95,42 +155,61 @@ const localIcon = L.icon({
   iconSize: [30, 30], // Tamaño del icono, puedes ajustarlo a tus necesidades
 });
 
-onMounted(() => {
-  modalReserva.value = new Modal(infoModal.value);
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+onMounted(async() => {
 
-      map.value = L.map("mapid").setView([lat, lon], 16);
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-      }).addTo(map?.value);
+  try { // Obtener Los Locales
+    const response = await fetch(
+      "http://35.232.169.75/api/v1/restobars_requests/"
+    );
+    if (response.ok) {
+      solicitudes.value = await response.json();
+    } 
+    
+    else {
+      console.error("No se pudo obtener las reservas");
+    }
+  } catch (error) {
+    console.error("Error tratando de obtener las reservas:", error);
+  }
 
-      // Añade un marcador para cada local
-      locales.forEach((local) => {
-        L.marker(
-          {
-            lat: local.coordinates[0],
-            lng: local.coordinates[1],
-          } as LatLngLiteral,
-          { icon: localIcon }
-        )
-          .addTo(map?.value)
-          .bindPopup(local.name)
+
+  Promise.all(fetches).then(() => { // Esperamos que se transformen todas las direcciones en latitud, longitud
+    modalReserva.value = new Modal(infoModal.value);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+          map.value = L.map("mapid").setView([lat, lon], 16);
+
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+          }).addTo(map?.value);
+
+          // Añade un marcador para cada local
+          console.log(locales2);
+          locales2.forEach((local) => {
+            L.marker(
+              {
+                lat: local.coordinates[0],
+                lng: local.coordinates[1],
+              } as LatLngLiteral,
+              { icon: localIcon }
+            )
+              .addTo(map?.value)
+              .bindPopup(local.name)
+              .openPopup();
+          });
+        // Añade un marcador para la ubicación actual del usuario
+        L.marker([lat, lon], { icon: gpsIcon })
+          .addTo(map.value)
+          .bindPopup("Tu Ubicación")
           .openPopup();
       });
-
-      // Añade un marcador para la ubicación actual del usuario
-      L.marker([lat, lon], { icon: gpsIcon })
-        .addTo(map.value)
-        .bindPopup("Tu Ubicación")
-        .openPopup();
-    });
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  });
 });
 </script>
 <template>
@@ -246,6 +325,35 @@ onMounted(() => {
       </div>
     </div>
   </div>
+
+  <div class="containerTabla">
+      <table class="tabla table">
+        <thead>
+          <tr>
+            <!-- loop through each value of the fields to get the table header -->
+            <th v-for="field in fields2" :key="field">
+              {{ field }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through the list get the each student data -->
+          <tr v-for="item in solicitudes" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.region }}</td>
+            <td>{{ item.commune }}</td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.unit_number }}</td>
+            <td>{{ item.owner_email }}</td>
+            <td>{{ item.status }}</td>
+            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
 </template>
 
 <style lang="css" scoped>
