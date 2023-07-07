@@ -95,6 +95,7 @@ const HandleButtonCancelarReserva = () => {
 const cancelarReserva = async () => {
   reserva.value.status = "Rejected";
   try {
+    // Cancelar reserva
     const response = await fetch(
       `http://35.232.169.75/api/v1/reservations/${id}`,
       {
@@ -163,6 +164,7 @@ const cancelarReserva = async () => {
   text-align: center;
   color: white;
 }
+
 #infobox {
   background: #72caba;
   border-radius: 10%;
@@ -172,7 +174,10 @@ const cancelarReserva = async () => {
   margin-top: 10%;
   margin-left: auto;
   margin-right: auto;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #infobox {
     margin-top: 5%;
     width: 50%;
   }
@@ -181,10 +186,14 @@ const cancelarReserva = async () => {
 #infobox p {
   margin: 2%;
   color: white;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #infobox p {
     font-size: 22px;
   }
 }
+
 .datos {
   margin: 3%;
 }
@@ -204,7 +213,10 @@ const cancelarReserva = async () => {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #botones button {
     width: 25%;
   }
 }

@@ -1,4 +1,27 @@
+import { setClientToken } from "@/api/client";
+import { getBooking, getUserInfo, postBooking } from "@/api/modules/common";
 import { defineStore } from "pinia";
+
+interface User {
+  email: string;
+  full_name: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  is_restobar_owner: boolean;
+  restobars: any[];
+}
+
+interface Booking {
+  people: number;
+  start_time: Date;
+  end_time: Date;
+  for_smokers: boolean;
+  id: number;
+  user_id: number;
+  table_id: number;
+  restobar_id: number;
+  status: string;
+}
 
 export const useUserStore = defineStore({
   id: "user",
@@ -7,6 +30,9 @@ export const useUserStore = defineStore({
     userIsAppAdmin: false,
     userIsRestobarAdmin: false,
     userIsLoggedIn: false,
+    loading: false,
+    userInfo: {} as User,
+    userBooking: [] as Booking[],
   }),
   getters: {
     getToken(): string {
@@ -21,12 +47,57 @@ export const useUserStore = defineStore({
     isLogged(): boolean {
       return this.userIsLoggedIn;
     },
+    user(): User {
+      return this.userInfo;
+    }
   },
   actions: {
     setToken(userToken: string): void {
       this.userToken = userToken;
       localStorage.setItem("userToken", userToken);
+      setClientToken(userToken);
     },
+    async getInfo() {
+      this.loading = true;
+      try {
+        // Obtener información de usuario
+        const response = await getUserInfo();
+        this.userInfo = response.data;
+      } catch (error) {
+        console.error(
+          "Error tratando de obtener la información del usuario:",
+          error
+        );
+      }
+      this.loading = false;
+    },
+
+    async getBooking() {
+      this.loading = true;
+      try {
+        // Obtener información de usuario
+        const response = await getBooking();
+        this.userBooking = response.data;
+      } catch (error) {
+        console.error(
+          "Error tratando de obtener la información de las reservas:",
+          error
+        );
+      }
+      this.loading = false;
+    },
+    async postBooking(booking: Booking, Localid:number) {
+      this.loading = true;
+      try {
+        const response = await postBooking(booking, Localid);
+        this.userBooking = response.data;
+        console.log(response, "bocking");
+      } catch (error) {
+        console.error("Error al realizar la reserva:", error);
+      }
+      this.loading = false;
+    },
+
     setIsAppAdmin(value: boolean): void {
       this.userIsAppAdmin = value;
       localStorage.setItem("userIsAppAdmin", value.toString());
@@ -67,6 +138,9 @@ export const useUserStore = defineStore({
       localStorage.removeItem("userIsAppAdmin");
       localStorage.removeItem("userIsRestobarAdmin");
       localStorage.removeItem("userIsLoggedIn");
+      this.userInfo = {} as User;
+      this.userBooking = [] as Booking[];
     },
   },
+  persist: true,
 });

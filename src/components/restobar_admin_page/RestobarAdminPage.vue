@@ -73,6 +73,7 @@ const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
   color: white;
   width: 100%;
 }
+
 .nombreTabla {
   margin-top: 2%;
   margin-left: 2%;
@@ -84,10 +85,8 @@ const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
   margin-top: 1%;
   margin-left: 2%;
   margin-right: 2%;
-  @media screen(lg) {
-    font-size: 20px;
-  }
 }
+
 .accion {
   margin-right: 2%;
 }
@@ -100,7 +99,13 @@ const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
   width: 95%;
   border-collapse: collapse;
   font-size: 15px;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .accionesTabla {
+    font-size: 20px;
+  }
+  .tabla {
     font-size: 18px;
   }
 }
@@ -109,3 +114,4 @@ const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
   margin-bottom: 10%;
 }
 </style>
+

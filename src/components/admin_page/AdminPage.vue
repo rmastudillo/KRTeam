@@ -16,6 +16,7 @@ const locales = ref<
 
 onMounted(async () => {
   try {
+    // Obtener locales
     const response = await fetch("http://35.232.169.75/api/v1/restobars/");
     if (response.ok) {
       locales.value = await response.json();
@@ -159,6 +160,7 @@ const fields2 = [
   color: white;
   width: 100%;
 }
+
 .nombreTabla {
   margin-top: 2%;
   margin-left: 2%;
@@ -170,10 +172,8 @@ const fields2 = [
   margin-top: 1%;
   margin-left: 2%;
   margin-right: 2%;
-  @media screen(lg) {
-    font-size: 20px;
-  }
 }
+
 .accion {
   margin-right: 2%;
 }
@@ -186,7 +186,13 @@ const fields2 = [
   width: 95%;
   border-collapse: collapse;
   font-size: 15px;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .accionesTabla {
+    font-size: 20px;
+  }
+  .tabla {
     font-size: 18px;
   }
 }

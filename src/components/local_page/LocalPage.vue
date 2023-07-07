@@ -2,12 +2,14 @@
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
+import { useUserStore } from "@/stores/userStore";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const userStore = useUserStore();
 const modalReserva = ref();
 const infoModal = ref();
 
@@ -102,6 +104,7 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
+  console.log(event);
 
   if (
     !verificarDuracion(
@@ -120,28 +123,13 @@ const crearReserva = async (event: any) => {
       people: parseInt(textInput.value),
       start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
       end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
-      for_smokers: fumadores.value,
-    };
+      for_smokers: fumadores.value ? true : false,
+    } as any;
 
     //console.log(reservaData);
 
     try {
-      const response = await fetch(
-        `http://35.232.169.75/api/v1/reservations/restobar/${Localid}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(reservaData),
-        }
-      );
-      if (response.ok) {
-        alert("Reserva realizada con éxito");
-        window.location.reload();
-      } else {
-        console.error("No se pudo realizar la reserva");
-      }
+      userStore.postBooking(reservaData, Localid.value);
     } catch (error) {
       console.error("Error al realizar la reserva:", error);
     }
@@ -486,10 +474,7 @@ onMounted(async () => {
 }
 
 #tittlel {
-  width: auto;
-  height: auto;
   font-family: "Oswald";
-  font-style: normal;
   font-weight: 600;
   font-size: 50px;
   line-height: 74px;
@@ -529,7 +514,10 @@ onMounted(async () => {
 
 .modal-body {
   text-align: center;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .modal-body {
     text-align: left;
   }
 }
@@ -543,28 +531,28 @@ onMounted(async () => {
 }
 
 #contenedorCalendario {
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     display: flex;
     justify-content: center;
   }
 }
 
 #contenedorCalendario p {
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     margin-right: 2%;
   }
 }
 
 #contenedorPersonas {
   margin-top: 2%;
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     display: flex;
     justify-content: center;
   }
 }
 
 #contenedorPersonas p {
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     margin-right: 2%;
   }
 }
@@ -572,14 +560,17 @@ onMounted(async () => {
 #elementosInferiores {
   margin-top: 2%;
   text-align: center;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #elementosInferiores {
     display: flex;
     justify-content: center; /* Centrar horizontalmente */
   }
 }
 
 #elementosInferiores .modal-element {
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     margin-left: 5%;
     margin-right: 5%;
   }
@@ -587,14 +578,14 @@ onMounted(async () => {
 
 #contenedorFumadores {
   margin-top: 2%;
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     display: flex;
     justify-content: center;
   }
 }
 
 #contenedorFumadores p {
-  @media screen(lg) {
+  @media screen and (min-width: 1024px) {
     margin-right: 1%;
   }
 }
@@ -603,6 +594,7 @@ onMounted(async () => {
   border: 2px solid black;
   width: 90%;
 }
+
 .modal-footer {
   justify-content: center;
 }
@@ -611,7 +603,10 @@ onMounted(async () => {
   position: relative;
   height: 50%; /* Altura máxima deseada para el contenedor */
   overflow-y: auto;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
     display: flex;
   }
 }
