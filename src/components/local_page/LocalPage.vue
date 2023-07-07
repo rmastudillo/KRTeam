@@ -92,15 +92,9 @@ const solicitudes = ref<
 >([]);
 
 
-// Locales coordenadas
-const locales = [
-  { id: 1, name: "Local 1", coordinates: [-33.53107140077256, -70.66385483116008] },
-  { id: 2, name: "Local 2", coordinates: [-33.520897439872115, -70.65229264363981] },
-  // ... más locales
-];
 
 
-const locales2 = [{
+const locales = [{
     name: "Sandwichería STEAKS BURGER",
     address: "Tobalaba 13949",
     unit_number: 0,
@@ -124,11 +118,22 @@ const locales2 = [{
     owner_id: 3,
     tables: [],
     coordinates : []
+  },
+{
+    name: "Sandwichería STEAKS BURGER",
+    address: "Tobalaba 1200",
+    unit_number: 0,
+    commune: "Peñalolén",
+    region: "Metropolitana",
+    menu_url: "",
+    id: 2,
+    owner_id: 3,
+    tables: [],
+    coordinates : []
   }
-
 ];
 
-let fetches = locales2.map(local => {
+let fetches = locales.map(local => {
   const fullAddress = `${local.address}, ${local.commune}, ${local.region}`;
 
   return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json`)
@@ -187,8 +192,7 @@ onMounted(async() => {
           }).addTo(map?.value);
 
           // Añade un marcador para cada local
-          console.log(locales2);
-          locales2.forEach((local) => {
+          locales.forEach((local) => {
             L.marker(
               {
                 lat: local.coordinates[0],
@@ -325,35 +329,6 @@ onMounted(async() => {
       </div>
     </div>
   </div>
-
-  <div class="containerTabla">
-      <table class="tabla table">
-        <thead>
-          <tr>
-            <!-- loop through each value of the fields to get the table header -->
-            <th v-for="field in fields2" :key="field">
-              {{ field }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Loop through the list get the each student data -->
-          <tr v-for="item in solicitudes" :key="item.id">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.region }}</td>
-            <td>{{ item.commune }}</td>
-            <td>{{ item.address }}</td>
-            <td>{{ item.unit_number }}</td>
-            <td>{{ item.owner_email }}</td>
-            <td>{{ item.status }}</td>
-            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
 </template>
 
 <style lang="css" scoped>
