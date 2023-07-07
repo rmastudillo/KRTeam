@@ -16,6 +16,19 @@ interface Errors {
   duracion?: string;
 }
 
+
+// Variables del local
+const Localname = ref('Presiona un Local!');  
+const Localdirection = ref('');
+const Localunit_number = ref(0);
+const Localcommune = ref('');
+const Localregion = ref('');
+const Localmenu_url = ref('');
+const Localid= ref(0);
+const Localowner_id= ref(0);
+const Localtables= ref([]);
+
+
 const selectedDate = ref();
 const startHour = ref<string>('');
 const startMinute = ref<string>('');
@@ -95,7 +108,7 @@ const solicitudes = ref<
 
 
 const locales = [{
-    name: "Sandwichería STEAKS BURGER",
+    name: "Pollos STEAKS ",
     address: "Tobalaba 13949",
     unit_number: 0,
     commune: "Peñalolén",
@@ -120,7 +133,7 @@ const locales = [{
     coordinates : []
   },
 {
-    name: "Sandwichería STEAKS BURGER",
+    name: "Pizzeria STEAKS BURGER",
     address: "Tobalaba 1200",
     unit_number: 0,
     commune: "Peñalolén",
@@ -202,6 +215,7 @@ onMounted(async() => {
             )
               .addTo(map?.value)
               .bindPopup(local.name)
+              .on('click', () => { Localname.value = local.name; Localdirection.value = local.address, Localcommune.value  = local.commune, Localunit_number.value  = local.unit_number, Localregion.value  = local.region, Localmenu_url.value  = local.menu_url, Localid.value  = local.id, Localowner_id.value  = local.owner_id, Localtables.value  = local.tables}) // Cambia el título cuando se haga clic en el marcador
               .openPopup();
           });
         // Añade un marcador para la ubicación actual del usuario
@@ -308,13 +322,14 @@ onMounted(async() => {
 
     <div id="container-text1" class="card-container flex-1">
       <div id="container-text2">
-        <h2 id="tittlel">Kiara Nikei</h2>
+        <h2 id="tittlel" v-text="Localname"></h2>
         <div id="subtitlel">
-          Tipo de comida: Japonesa <br />
-          Comidas: Almuerzo, Cena <br />
-          Acerca de: Experimenta los variados sabores de la gastronomía Nikkei y
-          cocktelería de autor, en un ambiente muy lindo y acogedor.
-        </div>
+              <p v-text="`Nombre: ${Localname}`"></p>
+              <p v-text="`Dirección: ${Localdirection}`"></p>
+              <p v-text="`Comuna: ${Localcommune}`"></p>
+              <p v-text="`Región: ${Localregion}`"></p>
+          </div>
+
         <div id="button-container">
           <button
             id="button-reservar"
@@ -372,11 +387,12 @@ onMounted(async() => {
   padding-left: 4%;
   padding-top: 4%;
   padding-bottom: 4%;
+
 }
 
 #tittlel {
-  width: 100%;
-  height: 63.2px;
+  width: auto;
+  height: auto;
   font-family: "Oswald";
   font-style: normal;
   font-weight: 600;
@@ -386,8 +402,8 @@ onMounted(async() => {
 }
 
 #subtitlel {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   font-family: "Roboto";
   font-style: normal;
   font-weight: 600;
@@ -415,6 +431,9 @@ onMounted(async() => {
 #infoModalLabel {
   margin-left: auto;
 }
+
+
+
 
 .modal-body {
   text-align: center;
