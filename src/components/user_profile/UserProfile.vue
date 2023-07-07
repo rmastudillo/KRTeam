@@ -1,93 +1,21 @@
 <script lang="ts" setup>
+import { useUserStore } from "@/stores/userStore";
 import { table } from "console";
-import { ref, onMounted, onUnmounted } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-const usuario = ref({
-  email: "UserEmail",
-  full_name: "UserName",
-  is_active: false,
-  is_superuser: false,
-  is_restobar_owner: false,
-  id: 0,
-  restobars: [],
-});
-
-const reservas = ref<
-  Array<{
-    people: number;
-    start_time: Date;
-    end_time: Date;
-    for_smokers: boolean;
-    id: number;
-    user_id: number;
-    table_id: number;
-    restobar_id: number;
-    status: string;
-  }>
->([]);
-
+const userStore = useUserStore();
 const router = useRouter();
 
-onMounted(async () => {
-  try {
-    const response = await fetch("http://35.232.169.75/api/v1/users/me");
-    if (response.ok) {
-      usuario.value = await response.json();
-    } else {
-      console.error("No se pudo obtener la información del usuario");
-    }
-  } catch (error) {
-    console.error(
-      "Error tratando de obtener la información del usuario:",
-      error
-    );
-  }
-});
+const reservas = userStore.userBooking;
 
-onMounted(async () => {
-  try {
-    const response = await fetch(
-      "http://35.232.169.75/api/v1/reservations/user/me"
-    );
-    if (response.ok) {
-      reservas.value = await response.json();
-    } else {
-      console.error("No se pudo obtener la información de las reservas");
-      // Esto en caso de que no se logre obtener los datos para probar la página (SE DEBE BORRAR)
-      reservas.value.push({
-        people: 2,
-        start_time: new Date("2023-07-04"),
-        end_time: new Date("2023-07-05"),
-        for_smokers: true,
-        id: 0,
-        user_id: 0,
-        table_id: 5,
-        restobar_id: 0,
-        status: "Pendiente",
-      });
-    }
-  } catch (error) {
-    console.error(
-      "Error tratando de obtener la información de las reservas:",
-      error
-    );
-  }
+onBeforeMount(async () => {
+  await userStore.getInfo();
+  await userStore.getBooking();
+  console.log(userStore.userBooking);
 });
 
 const fields = ["Local", "Fecha y hora", "Mesa", " "];
-
-onUnmounted(() => {
-  usuario.value = {
-    email: "UserEmail",
-    full_name: "UserName",
-    is_active: false,
-    is_superuser: false,
-    is_restobar_owner: false,
-    id: 0,
-    restobars: [],
-  };
-});
 
 const HandleButtonVerReserva = (
   id: number,
@@ -177,11 +105,11 @@ const borrarCuenta = async () => {
     </div> -->
       <div class="datos">
         <h4>Nombre Completo:</h4>
-        <p>{{ usuario.full_name }}</p>
+        <p>{{ userStore.user.full_name }}</p>
       </div>
       <div class="datos">
         <h4>Email:</h4>
-        <p>{{ usuario.email }}</p>
+        <p>{{ userStore.user.email }}</p>
       </div>
       <div class="datos">
         <div id="tablaLocales" class="containerTabla">
@@ -242,6 +170,7 @@ const borrarCuenta = async () => {
   text-align: center;
   color: white;
 }
+
 #infobox {
   background: #72caba;
   border-radius: 10%;
@@ -251,7 +180,10 @@ const borrarCuenta = async () => {
   margin-top: 10%;
   margin-left: auto;
   margin-right: auto;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #infobox {
     margin-top: 5%;
     width: 50%;
   }
@@ -260,10 +192,14 @@ const borrarCuenta = async () => {
 #infobox p {
   margin: 2%;
   color: white;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #infobox p {
     font-size: 22px;
   }
 }
+
 .datos {
   margin: 5%;
 }
@@ -283,7 +219,10 @@ const borrarCuenta = async () => {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
-  @media screen(lg) {
+}
+
+@media screen and (min-width: 1024px) {
+  #botones button {
     width: 25%;
   }
 }
