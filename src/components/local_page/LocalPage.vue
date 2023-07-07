@@ -2,11 +2,10 @@
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
-import L, { LatLngLiteral } from "leaflet";
-import { onMounted, ref, computed } from "vue";
 import { Modal } from "bootstrap";
+import L, { LatLngLiteral } from "leaflet";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-
 
 const router = useRouter();
 const modalReserva = ref();
@@ -16,24 +15,22 @@ interface Errors {
   duracion?: string;
 }
 
-
 // Variables del local
-const Localname = ref('Presiona un Local!');  
-const Localdirection = ref('');
+const Localname = ref("Presiona un Local!");
+const Localdirection = ref("");
 const Localunit_number = ref(0);
-const Localcommune = ref('');
-const Localregion = ref('');
-const Localmenu_url = ref('');
-const Localid= ref(0);
-const Localowner_id= ref(0);
-const Localtables= ref([]);
-
+const Localcommune = ref("");
+const Localregion = ref("");
+const Localmenu_url = ref("");
+const Localid = ref(0);
+const Localowner_id = ref(0);
+const Localtables = ref<number[]>([]);
 
 const selectedDate = ref();
-const startHour = ref<string>('');
-const startMinute = ref<string>('');
-const endHour = ref<string>('');
-const endMinute = ref<string>('');
+const startHour = ref<string>("");
+const startMinute = ref<string>("");
+const endHour = ref<string>("");
+const endMinute = ref<string>("");
 const textInput = ref();
 const fumadores = ref<boolean>();
 const errors = ref<Errors>({});
@@ -42,68 +39,107 @@ const fechaMinima = computed(() => {
   const fechaActual = new Date();
   const mes = fechaActual.getMonth() + 1;
   const dia = fechaActual.getDate();
-  return `${fechaActual.getFullYear()}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`;
+  return `${fechaActual.getFullYear()}-${mes < 10 ? "0" : ""}${mes}-${
+    dia < 10 ? "0" : ""
+  }${dia}`;
 });
 
-const hours = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
-const availableMinutes = ['00', '15', '30', '45'];
+const hours = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "00",
+];
+const availableMinutes = ["00", "15", "30", "45"];
 
-
-const verificarDuracion = (startHour: number, startMinute: number, endHour: number, endMinute: number) => {
+const verificarDuracion = (
+  startHour: number,
+  startMinute: number,
+  endHour: number,
+  endMinute: number
+) => {
   let totalMinutos = 0;
   // Le sumo los minutos dada la diferencia de horas
   if (endHour - startHour > 0) {
-    totalMinutos += (endHour - startHour) * 60
+    totalMinutos += (endHour - startHour) * 60;
   } else {
-    totalMinutos += (endHour - (startHour - 24)) * 60
+    totalMinutos += (endHour - (startHour - 24)) * 60;
   }
   // Le sumo los minutos dada la diferencia de minutos
-  totalMinutos += (endMinute - startMinute)
+  totalMinutos += endMinute - startMinute;
 
   if (totalMinutos > 3 * 60) {
     // No más de 3 horas
-    return false
-
+    return false;
   } else if (totalMinutos < 30) {
     // No menos de 30 min
-    return false
+    return false;
   }
 
-  return true
-}
-
+  return true;
+};
 
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
 
-  if (!verificarDuracion(parseInt(startHour.value), parseInt(startMinute.value), parseInt(endHour.value), parseInt(endMinute.value))){
-    errors.value.duracion = 'La duración de la reserva debe ser entre 30 minutos y 3 horas';
+  if (
+    !verificarDuracion(
+      parseInt(startHour.value),
+      parseInt(startMinute.value),
+      parseInt(endHour.value),
+      parseInt(endMinute.value)
+    )
+  ) {
+    errors.value.duracion =
+      "La duración de la reserva debe ser entre 30 minutos y 3 horas";
   }
 
   if (Object.keys(errors.value).length === 0) {
     const reservaData = {
-      "people": parseInt(textInput.value), 
-      "start_time": `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-      "end_time": `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
-      "for_smokers": fumadores.value,
-    }
+      people: parseInt(textInput.value),
+      start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
+      end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+      for_smokers: fumadores.value,
+    };
 
     //console.log(reservaData);
 
     try {
-      const response = await fetch(`http://35.232.169.75/api/v1/reservations/restobar/${Localid}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(reservaData)
-      });
+      const response = await fetch(
+        `http://35.232.169.75/api/v1/reservations/restobar/${Localid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reservaData),
+        }
+      );
       if (response.ok) {
         alert("Reserva realizada con éxito");
         window.location.reload();
-      } 
-      else {
+      } else {
         console.error("No se pudo realizar la reserva");
       }
     } catch (error) {
@@ -111,9 +147,6 @@ const crearReserva = async (event: any) => {
     }
   }
 };
-
-
-
 
 const map = ref();
 const solicitudes = ref<
@@ -131,10 +164,21 @@ const solicitudes = ref<
   }>
 >([]);
 
+interface Local {
+  name: string;
+  address: string;
+  unit_number: number;
+  commune: string;
+  region: string;
+  id: number;
+  owner_id: number;
+  tables: Array<number>;
+  coordinates: Array<number>;
+  menu_url: string;
+}
 
-
-
-const locales = [{
+const locales = [
+  {
     name: "Pollos STEAKS ",
     address: "Tobalaba 13949",
     unit_number: 0,
@@ -144,10 +188,10 @@ const locales = [{
     id: 1,
     owner_id: 3,
     tables: [],
-    coordinates : []
-},
-  
-{
+    coordinates: [],
+  },
+
+  {
     name: "Sandwichería STEAKS BURGER",
     address: "Tobalaba 1300",
     unit_number: 0,
@@ -157,9 +201,9 @@ const locales = [{
     id: 2,
     owner_id: 3,
     tables: [],
-    coordinates : []
+    coordinates: [],
   },
-{
+  {
     name: "Pizzeria STEAKS BURGER",
     address: "Tobalaba 1200",
     unit_number: 0,
@@ -169,25 +213,26 @@ const locales = [{
     id: 2,
     owner_id: 3,
     tables: [],
-    coordinates : []
-  }
-];
+    coordinates: [],
+  },
+] as Array<Local>;
 
-let fetches = locales.map(local => {
+let fetches = locales.map((local) => {
   const fullAddress = `${local.address}, ${local.commune}, ${local.region}`;
 
-  return fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json`)
-      .then(response => response.json())
-      .then(data => {
-          if (data && data.length > 0) {
-              local.coordinates[0] = parseFloat(data[0].lat);
-              local.coordinates[1]= parseFloat(data[0].lon);
-          }
-      });
+  return fetch(
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+      fullAddress
+    )}&format=json`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (data && data.length > 0) {
+        local.coordinates[0] = parseFloat(data[0].lat);
+        local.coordinates[1] = parseFloat(data[0].lon);
+      }
+    });
 });
-
-
-
 
 // Define los iconos personalizados
 const gpsIcon = L.icon({
@@ -200,19 +245,14 @@ const localIcon = L.icon({
   iconSize: [30, 30], // Tamaño del icono, puedes ajustarlo a tus necesidades
 });
 
-onMounted(async() => {
-
-
-  try { // Obtener Los Locales
-    const response = await fetch(
-      "http://35.232.169.75/api/v1/restobars/"
-    );
+onMounted(async () => {
+  try {
+    // Obtener Los Locales
+    const response = await fetch("http://35.232.169.75/api/v1/restobars/");
     if (response.ok) {
       solicitudes.value = await response.json();
       console.log(solicitudes.value);
-    } 
-    
-    else {
+    } else {
       console.error("No se pudo obtener las reservas");
       console.log(solicitudes.value);
     }
@@ -220,33 +260,43 @@ onMounted(async() => {
     console.error("Error tratando de obtener las reservas:", error);
   }
 
-
-  Promise.all(fetches).then(() => { // Esperamos que se transformen todas las direcciones en latitud, longitud
+  Promise.all(fetches).then(() => {
+    // Esperamos que se transformen todas las direcciones en latitud, longitud
     modalReserva.value = new Modal(infoModal.value);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-          map.value = L.map("mapid").setView([lat, lon], 16);
+        map.value = L.map("mapid").setView([lat, lon], 16);
 
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-          }).addTo(map?.value);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+        }).addTo(map?.value);
 
-          // Añade un marcador para cada local
-          locales.forEach((local) => {
-            L.marker(
-              {
-                lat: local.coordinates[0],
-                lng: local.coordinates[1],
-              } as LatLngLiteral,
-              { icon: localIcon }
-            )
-              .addTo(map?.value)
-              .bindPopup(local.name)
-              .on('click', () => { Localname.value = local.name; Localdirection.value = local.address, Localcommune.value  = local.commune, Localunit_number.value  = local.unit_number, Localregion.value  = local.region, Localmenu_url.value  = local.menu_url, Localid.value  = local.id, Localowner_id.value  = local.owner_id, Localtables.value  = local.tables}) // Cambia el título cuando se haga clic en el marcador
-              .openPopup();
-          });
+        // Añade un marcador para cada local
+        locales.forEach((local) => {
+          L.marker(
+            {
+              lat: local.coordinates[0],
+              lng: local.coordinates[1],
+            } as LatLngLiteral,
+            { icon: localIcon }
+          )
+            .addTo(map?.value)
+            .bindPopup(local.name)
+            .on("click", () => {
+              Localname.value = local.name;
+              (Localdirection.value = local.address),
+                (Localcommune.value = local.commune),
+                (Localunit_number.value = local.unit_number),
+                (Localregion.value = local.region),
+                (Localmenu_url.value = local.menu_url),
+                (Localid.value = local.id),
+                (Localowner_id.value = local.owner_id),
+                (Localtables.value = local.tables);
+            }) // Cambia el título cuando se haga clic en el marcador
+            .openPopup();
+        });
         // Añade un marcador para la ubicación actual del usuario
         L.marker([lat, lon], { icon: gpsIcon })
           .addTo(map.value)
@@ -260,32 +310,39 @@ onMounted(async() => {
 });
 </script>
 <template>
-<div
-  class="modal fade"
-  ref="infoModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 id="infoModalLabel">Crea tu reserva</h5>
-        <button
-          type="button"
-          class="btn-close"
-          @click="modalReserva.hide()"
-          aria-label="Close"
-        ></button>
-      </div>
-      <form @submit="crearReserva">
-        <div class="modal-body">
+  <div class="modal fade" ref="infoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="infoModalLabel">Crea tu reserva</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="modalReserva.hide()"
+            aria-label="Close"
+          ></button>
+        </div>
+        <form @submit="crearReserva">
+          <div class="modal-body">
             <div class="modal-element" id="contenedorCalendario">
               <p>Selecciona la fecha:</p>
-              <input type="date" v-model="selectedDate" :min="fechaMinima" required>
+              <input
+                type="date"
+                v-model="selectedDate"
+                :min="fechaMinima"
+                required
+              />
             </div>
             <div class="modal-element" id="contenedorPersonas">
               <p>Número de personas:</p>
-              <input class="text" v-model="textInput" inputmode="numeric" pattern="[0-9]*" placeholder="" required/>
+              <input
+                class="text"
+                v-model="textInput"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                placeholder=""
+                required
+              />
             </div>
             <div id="elementosInferiores">
               <div class="modal-element">
@@ -293,12 +350,16 @@ onMounted(async() => {
                 <div class="container">
                   <select v-model="startHour" class="select" required>
                     <option value="" disabled>Selecciona Hora</option>
-                    <option v-for="hour in hours" :value="hour">{{ hour }} horas</option>
+                    <option v-for="hour in hours" :value="hour">
+                      {{ hour }} horas
+                    </option>
                   </select>
-              
+
                   <select v-model="startMinute" class="select" required>
                     <option value="" disabled>Selecciona Minutos</option>
-                    <option v-for="minute in availableMinutes" :value="minute">{{ minute }} minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">
+                      {{ minute }} minutos
+                    </option>
                   </select>
                 </div>
               </div>
@@ -308,37 +369,41 @@ onMounted(async() => {
                 <div class="container">
                   <select v-model="endHour" class="select" required>
                     <option value="" disabled>Selecciona Hora</option>
-                    <option v-for="hour in hours" :value="hour">{{ hour }} horas</option>
+                    <option v-for="hour in hours" :value="hour">
+                      {{ hour }} horas
+                    </option>
                   </select>
-              
+
                   <select v-model="endMinute" class="select" required>
                     <option value="" disabled>Selecciona Minutos</option>
-                    <option v-for="minute in availableMinutes" :value="minute">{{ minute }} minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">
+                      {{ minute }} minutos
+                    </option>
                   </select>
                 </div>
               </div>
             </div>
-          <span v-if="errors.duracion" class="error-message">{{ errors.duracion }}</span>
-          <div class="modal-element" id="contenedorFumadores">
-            <p>Mesa para fumadores?</p>
-            <input type="checkbox" v-model="fumadores"/>
+            <span v-if="errors.duracion" class="error-message">{{
+              errors.duracion
+            }}</span>
+            <div class="modal-element" id="contenedorFumadores">
+              <p>Mesa para fumadores?</p>
+              <input type="checkbox" v-model="fumadores" />
+            </div>
           </div>
-          
-        </div>
-        <div class="modal-footer">
-          <button
-            type="submit"
-            class="boton-crear-reserva"
-            onclick="event => crearReserva(event)"
-          >
-            RESERVAR
-          </button>
-
-        </div>
-      </form>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="boton-crear-reserva"
+              onclick="event => crearReserva(event)"
+            >
+              RESERVAR
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
   <div class="map-container">
     <div id="mapid"></div>
   </div>
@@ -355,11 +420,11 @@ onMounted(async() => {
       <div id="container-text2">
         <h2 id="tittlel" v-text="Localname"></h2>
         <div id="subtitlel">
-              <p v-text="`Nombre: ${Localname}`"></p>
-              <p v-text="`Dirección: ${Localdirection}`"></p>
-              <p v-text="`Comuna: ${Localcommune}`"></p>
-              <p v-text="`Región: ${Localregion}`"></p>
-          </div>
+          <p v-text="`Nombre: ${Localname}`"></p>
+          <p v-text="`Dirección: ${Localdirection}`"></p>
+          <p v-text="`Comuna: ${Localcommune}`"></p>
+          <p v-text="`Región: ${Localregion}`"></p>
+        </div>
 
         <div id="button-container">
           <button
@@ -418,7 +483,6 @@ onMounted(async() => {
   padding-left: 4%;
   padding-top: 4%;
   padding-bottom: 4%;
-
 }
 
 #tittlel {
@@ -462,9 +526,6 @@ onMounted(async() => {
 #infoModalLabel {
   margin-left: auto;
 }
-
-
-
 
 .modal-body {
   text-align: center;
@@ -537,8 +598,6 @@ onMounted(async() => {
     margin-right: 1%;
   }
 }
-
-
 
 .boton-crear-reserva {
   border: 2px solid black;
