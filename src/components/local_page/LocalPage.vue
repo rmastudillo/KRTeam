@@ -73,17 +73,42 @@ const verificarDuracion = (startHour: number, startMinute: number, endHour: numb
 }
 
 
-const crearReserva = (event: any) => {
+const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-  
+
   if (!verificarDuracion(parseInt(startHour.value), parseInt(startMinute.value), parseInt(endHour.value), parseInt(endMinute.value))){
     errors.value.duracion = 'La duración de la reserva debe ser entre 30 minutos y 3 horas';
   }
 
   if (Object.keys(errors.value).length === 0) {
-    alert("Solicitud aún no implementada")
-    window.location.reload();
+    const reservaData = {
+      "people": parseInt(textInput.value), 
+      "start_time": `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
+      "end_time": `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+      "for_smokers": fumadores.value,
+    }
+
+    console.log(reservaData);
+
+    try {
+      const response = await fetch(`http://35.232.169.75/api/v1/reservations/restobar/${Localid}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservaData)
+      });
+      if (response.ok) {
+        alert("Reserva realizada con éxito");
+        window.location.reload();
+      } 
+      else {
+        console.error("No se pudo realizar la reserva");
+      }
+    } catch (error) {
+      console.error("Error al realizar la reserva:", error);
+    }
   }
 };
 
@@ -300,9 +325,11 @@ onMounted(async() => {
           <button
             type="submit"
             class="boton-crear-reserva"
+            onclick="event => crearReserva(event)"
           >
             RESERVAR
           </button>
+
         </div>
       </form>
     </div>
