@@ -89,7 +89,7 @@ const crearReserva = async (event: any) => {
       "for_smokers": fumadores.value,
     }
 
-    console.log(reservaData);
+    //console.log(reservaData);
 
     try {
       const response = await fetch(`http://35.232.169.75/api/v1/reservations/restobar/${Localid}`, {
@@ -119,13 +119,15 @@ const map = ref();
 const solicitudes = ref<
   Array<{
     name: string;
-    owner_email: string;
     address: string;
     unit_number: number;
     commune: string;
     region: string;
-    status: string;
+    menu_url: string;
     id: number;
+    owner_id: number;
+    tables: Array<number>;
+    coordinates: Array<number>;
   }>
 >([]);
 
@@ -203,14 +205,16 @@ onMounted(async() => {
 
   try { // Obtener Los Locales
     const response = await fetch(
-      "http://35.232.169.75/api/v1/restobars_requests/"
+      "http://35.232.169.75/api/v1/restobars/"
     );
     if (response.ok) {
       solicitudes.value = await response.json();
+      console.log(solicitudes.value);
     } 
     
     else {
       console.error("No se pudo obtener las reservas");
+      console.log(solicitudes.value);
     }
   } catch (error) {
     console.error("Error tratando de obtener las reservas:", error);
