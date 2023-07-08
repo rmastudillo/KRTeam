@@ -1,59 +1,12 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
+import { onMounted } from "vue";
 
-const locales = ref<
-  Array<{
-    name: string;
-    address: string;
-    unit_number: number;
-    commune: string;
-    region: string;
-    menu_url: string;
-    id: number;
-    owner_id: number;
-  }>
->([]);
+const userStore = useUserStore();
 
 onMounted(async () => {
-  try {
-    // Obtener locales
-    const response = await fetch("http://35.232.169.75/api/v1/restobars/");
-    if (response.ok) {
-      locales.value = await response.json();
-    } else {
-      console.error("No se pudo obtener los locales");
-    }
-  } catch (error) {
-    console.error("Error tratando de obtener los locales:", error);
-  }
-});
-
-const solicitudes = ref<
-  Array<{
-    name: string;
-    owner_email: string;
-    address: string;
-    unit_number: number;
-    commune: string;
-    region: string;
-    status: string;
-    id: number;
-  }>
->([]);
-
-onMounted(async () => {
-  try {
-    const response = await fetch(
-      "http://35.232.169.75/api/v1/restobars_requests/"
-    );
-    if (response.ok) {
-      solicitudes.value = await response.json();
-    } else {
-      console.error("No se pudo obtener las reservas");
-    }
-  } catch (error) {
-    console.error("Error tratando de obtener las reservas:", error);
-  }
+  userStore.adminGetRestobar();
+  userStore.adminGetRestobarRequest();
 });
 
 const fields1 = [
@@ -102,7 +55,7 @@ const fields2 = [
         </thead>
         <tbody>
           <!-- Loop through the list get the each student data -->
-          <tr v-for="item in locales" :key="item.id">
+          <tr v-for="item in userStore.adminRestobar" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.region }}</td>
@@ -135,7 +88,7 @@ const fields2 = [
         </thead>
         <tbody>
           <!-- Loop through the list get the each student data -->
-          <tr v-for="item in solicitudes" :key="item.id">
+          <tr v-for="item in userStore.adminRestobarRequest" :key="item.id">
             <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.region }}</td>

@@ -50,13 +50,14 @@ export const patchRestobarByIdMenu = async (restobar_id: number, data: any) =>
 
 // Restobar requests
 
-export const getRestobarRequests = async () => client.get("/restobar_requests");
+export const getRestobarRequests = async () =>
+  client.get("/restobars_requests/");
 
 export const postRestobarRequest = async (data: any) =>
-  client.post("/restobar_requests", data);
+  client.post("/restobars_request/s", data);
 
 export const patchRestobarRequest = async (data: any, id: number) =>
-  client.patch(`/restobar_requests/${id}`, data);
+  client.patch(`/restobars_requests/${id}`, data);
 
 // Tables
 

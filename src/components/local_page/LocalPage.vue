@@ -2,13 +2,11 @@
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
-import { useUserStore } from "@/stores/userStore";
+import { Local, useUserStore } from "@/stores/userStore";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const userStore = useUserStore();
 const modalReserva = ref();
 const infoModal = ref();
@@ -104,7 +102,6 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-  console.log(event);
 
   if (
     !verificarDuracion(
@@ -151,19 +148,6 @@ const solicitudes = ref<
     coordinates: Array<number>;
   }>
 >([]);
-
-interface Local {
-  name: string;
-  address: string;
-  unit_number: number;
-  commune: string;
-  region: string;
-  id: number;
-  owner_id: number;
-  tables: Array<number>;
-  coordinates: Array<number>;
-  menu_url: string;
-}
 
 const locales = [
   {
