@@ -1,6 +1,7 @@
 import { setClientToken } from "@/api/client";
 import {
   getBooking,
+  getReservations,
   getRestobarRequests,
   getRestobars,
   getUserInfo,
@@ -64,6 +65,7 @@ export const useUserStore = defineStore({
     userBooking: [] as Booking[],
     adminRestobar: [] as Local[],
     adminRestobarRequest: [] as LocalRequest[],
+    managerRestobarBooking: [] as any[],
   }),
   getters: {
     getToken(): string {
@@ -80,6 +82,9 @@ export const useUserStore = defineStore({
     },
     user(): User {
       return this.userInfo;
+    },
+    myRestobars(): Local[] {
+      return this.userInfo.restobars;
     },
   },
   actions: {
@@ -128,6 +133,24 @@ export const useUserStore = defineStore({
       this.loading = false;
     },
 
+    async getMyRestobarsBooking() {
+      this.loading = true;
+      this.managerRestobarBooking = [];
+      try {
+        // Obtener información de usuario
+        this.getInfo();
+        if (this.user.restobars.length > 0) {
+          const table_id = this.user.restobars[0].id;
+          const response = await getReservations(table_id);
+          this.managerRestobarBooking = response.data;
+        }
+      } catch (error) {
+        console.error(
+          "Error tratando de obtener la información del usuario:",
+          error
+        );
+      }
+    },
     async adminGetRestobar() {
       this.loading = true;
       this.adminRestobar = [];
