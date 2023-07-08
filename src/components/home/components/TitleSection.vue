@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { postRestobarRequest } from "@/api/modules/common";
 import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const campos = ref([
   { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
@@ -12,15 +13,31 @@ const campos = ref([
   { id: "email", label: "Correo", type: "email", valor: "" },
   { id: "phoneNumber", label: "Número de contacto", type: "tel", valor: "" },
 ]);
-const handleSubmit = (e: any) => {
+const handleSubmit = async (e: any) => {
   e.preventDefault();
-  console.log(e);
+  const data = {
+    name: campos.value[0].valor,
+    owner_email: campos.value[5].valor,
+    address: campos.value[1].valor,
+    unit_number: null,
+    commune: "Santiago",
+    region: "Metropolitana",
+  };
+  console.log(data);
+  try {
+    await postRestobarRequest(data);
+    alert(
+      "La solicitud ha sido enviada, nos contactaremos contigo a la brevedad!"
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const router = useRouter();
 
 const redirigirMapa = () => {
-  router.push('/local');
+  router.push("/local");
 };
 </script>
 <template>
@@ -33,7 +50,11 @@ const redirigirMapa = () => {
       reserva con nosotros en sencillo pasos, tan solo regístrate, busca tu
       restaurant, reserva y listo!
     </h2>
-    <button type="button" class="btn bg-white btn-lg text-center" @click="redirigirMapa">
+    <button
+      type="button"
+      class="btn bg-white btn-lg text-center"
+      @click="redirigirMapa"
+    >
       <span class="mx-2 text-3xl">Reserva</span>
       <i class="bi bi-geo-alt-fill text-3xl" />
     </button>
@@ -67,8 +88,7 @@ const redirigirMapa = () => {
   </div>
   <div class="form-main-container">
     <h2 class="form-title">
-      ¿Te interesa usar ReservApp para potenciar las visitas a tu
-      restaurante?
+      ¿Te interesa usar ReservApp para potenciar las visitas a tu restaurante?
     </h2>
     <h3 class="form-subtitle">
       Sin costo de inscripción o mensualidad. ¡Llena el formulario debajo y

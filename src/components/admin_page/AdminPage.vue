@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { patchRestobarRequest, postRestobar } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
 import { onMounted } from "vue";
 
@@ -29,6 +30,33 @@ const fields2 = [
   "Estado de solicitud",
   " ",
 ];
+
+const handleReject = (id: number) => {
+  try {
+    patchRestobarRequest({ status: "Rejected" }, id);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleAcept = (item: any) => {
+  try {
+    console.log(item);
+    const data = {
+      name : item.name,
+      address: item.address,
+      unit_number: 1,
+      commune: item.commune,
+      region: item.region,
+      menu_url: null,
+      owner_email: "richard@skipo.io",
+    }
+    console.log(data, "stoy mandando esto")
+    postRestobar(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 
 <template>
@@ -97,7 +125,10 @@ const fields2 = [
             <td>{{ item.unit_number }}</td>
             <td>{{ item.owner_email }}</td>
             <td>{{ item.status }}</td>
-            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+            <td>
+              <button @click="handleAcept(item)">ACEPTAR</button
+              ><button @click="handleReject(item.id)">RECHAZAR</button>
+            </td>
           </tr>
         </tbody>
       </table>
