@@ -29,10 +29,10 @@ export const deleteUserById = async (user_id: number) =>
 
 // Restobars
 
-export const getRestobars = async () => client.get("/restobars");
+export const getRestobars = async () => client.get("/restobars/");
 
 export const postRestobar = async (data: any) =>
-  client.post("/restobars", data);
+  client.post("/restobars/", data);
 
 // Restobar by id
 
@@ -54,7 +54,7 @@ export const getRestobarRequests = async () =>
   client.get("/restobars_requests/");
 
 export const postRestobarRequest = async (data: any) =>
-  client.post("/restobars_request/s", data);
+  client.post("/restobars_requests/", data);
 
 export const patchRestobarRequest = async (data: any, id: number) =>
   client.patch(`/restobars_requests/${id}`, data);
