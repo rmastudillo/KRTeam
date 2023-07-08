@@ -132,7 +132,6 @@ export const useUserStore = defineStore({
       this.loading = true;
       this.adminRestobar = [];
       try {
-        // Obtener información de usuario
         const response = await getRestobars();
         this.adminRestobar = response.data;
       } catch (error) {
