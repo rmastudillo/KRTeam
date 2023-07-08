@@ -12,7 +12,6 @@ const reservas = userStore.userBooking;
 onBeforeMount(async () => {
   await userStore.getInfo();
   await userStore.getBooking();
-  console.log(userStore.userBooking);
 });
 
 const fields = ["Local", "Fecha y hora", "Mesa", " "];

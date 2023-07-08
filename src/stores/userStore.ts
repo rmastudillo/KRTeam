@@ -122,7 +122,6 @@ export const useUserStore = defineStore({
       try {
         const response = await postBooking(booking, Localid);
         this.userBooking = response.data;
-        console.log(response, "bocking");
       } catch (error) {
         console.error("Error al realizar la reserva:", error);
       }
