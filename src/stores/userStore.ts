@@ -4,8 +4,10 @@ import {
   getReservations,
   getRestobarRequests,
   getRestobars,
+  getTables,
   getUserInfo,
   postBooking,
+  postTable,
 } from "@/api/modules/common";
 import { defineStore } from "pinia";
 
@@ -66,6 +68,7 @@ export const useUserStore = defineStore({
     adminRestobar: [] as Local[],
     adminRestobarRequest: [] as LocalRequest[],
     managerRestobarBooking: [] as any[],
+    managerMyTables: [] as any[],
   }),
   getters: {
     getToken(): string {
@@ -151,6 +154,22 @@ export const useUserStore = defineStore({
         );
       }
     },
+
+    async managerGetMyTables(restobar_id: number) {
+      this.loading = true;
+      this.managerMyTables = [];
+      try {
+        // Obtener información de usuario
+        const response = await getTables(restobar_id);
+        this.managerMyTables = response.data;
+      } catch (error) {
+        console.error(
+          "Error tratando de obtener la información del usuario:",
+          error
+        );
+      }
+    },
+
     async adminGetRestobar() {
       this.loading = true;
       this.adminRestobar = [];
@@ -176,6 +195,15 @@ export const useUserStore = defineStore({
       this.loading = false;
     },
 
+    async managerAddTable(restobar_id: number, data: any) {
+      this.loading = true;
+      try {
+        await postTable(data, restobar_id);
+      } catch (error) {
+        console.error("Error al realizar la reserva:", error);
+      }
+      this.loading = false;
+    },
     setIsAppAdmin(value: boolean): void {
       this.userIsAppAdmin = value;
       localStorage.setItem("userIsAppAdmin", value.toString());

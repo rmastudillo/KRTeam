@@ -6,6 +6,7 @@ const userStore = useUserStore();
 
 onMounted(() => {
   userStore.getMyRestobarsBooking();
+  userStore.managerGetMyTables(userStore.myRestobars[0].id);
   // Obtener mesas
 });
 
@@ -45,23 +46,52 @@ const reservas = ref<
 //   }
 // });
 
-const fieldsMesas = ["Id", "Nombre", "Capacidad", "¿Se puede fumar?", "Estado", " "];
-const fieldsReservas = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
-
+const fieldsMesas = [
+  "Id",
+  "Nombre",
+  "Capacidad",
+  "¿Se puede fumar?",
+  "Estado",
+  " ",
+];
+const fieldsReservas = [
+  "Id",
+  "Mesa",
+  "Número de personas",
+  "Fecha",
+  "Hora",
+  " ",
+];
 
 const inputNombre = ref();
 const inputCapacidad = ref();
 const inputFumadores = ref();
 
-const crearMesa = async (event: any) => {
+const crearMesa = (event: any) => {
+  event.preventDefault();
+
+  console.log(event);
+  console.log(inputNombre.value);
+  console.log(inputCapacidad.value);
+  console.log(inputFumadores.value);
+
+  const data = {
+    name: inputNombre.value,
+    capacity: inputCapacidad.value,
+    is_smoking_allowed: !!inputFumadores.value,
+  };
+  try {
+    userStore.managerAddTable(userStore.myRestobars[0].id, data);
+  } catch (error) {
+    console.log("errooor", error);
+  }
+
   // Llamar al post de mesas (falta el id del local)
-}
+};
 
 const eliminarMesa = async (table_id: number) => {
   // Llamar al delete de mesas (falta el id del local)
-}
-
-
+};
 </script>
 
 <template>
@@ -74,7 +104,7 @@ const eliminarMesa = async (table_id: number) => {
   </h1>
   <!-- Tabla de las mesas -->
   <div id="contenedorMesas" class="w-full">
-    <form id="formMesa" class="w-full"  @submit="crearMesa">
+    <form id="formMesa" class="w-full" @submit="crearMesa">
       <h2 class="nombreTabla">Agregar una Mesa</h2>
       <div class="form-element">
         <p>Nombre de la mesa:</p>
@@ -91,9 +121,8 @@ const eliminarMesa = async (table_id: number) => {
         <input
           class="text"
           v-model="inputCapacidad"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          placeholder=""
+          type="number"
+          min="0"
           required
         />
       </div>
@@ -103,11 +132,7 @@ const eliminarMesa = async (table_id: number) => {
         <input type="checkbox" v-model="inputFumadores" />
       </div>
 
-      <button
-        type="submit"
-        class="boton-crear-mesa"
-        onclick="event => crearMesa(event)"
-      >
+      <button type="submit" class="boton-crear-mesa" @click="crearMesa($event)">
         Crear Mesa
       </button>
     </form>
@@ -123,29 +148,29 @@ const eliminarMesa = async (table_id: number) => {
           <thead>
             <tr>
               <!-- loop through each value of the fields to get the table header -->
-              <th
-                v-for="field in fieldsMesas"
-              >
+              <th v-for="field in fieldsMesas">
                 {{ field }}
               </th>
             </tr>
           </thead>
           <tbody>
             <!-- Loop through the list get the each student data -->
-            <tr v-for="item in mesas" :key="item.id">
+            <tr v-for="item in userStore.managerMyTables" :key="item.id">
               <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.capacity }}</td>
-              <td>{{ item.is_smoking_allowed ? "Si" : "No"  }}</td>
+              <td>{{ item.is_smoking_allowed ? "Si" : "No" }}</td>
               <td>{{ item.status }}</td>
-              <td><button @click="eliminarMesa(item.id)">Eliminar mesa</button></td>
+              <td>
+                <button @click="eliminarMesa(item.id)">Eliminar mesa</button>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  
+
   <!-- Tabla de las reservas -->
   <div id="tablaReservas" class="w-full">
     <h2 class="nombreTabla">Reservas</h2>
@@ -208,7 +233,7 @@ const eliminarMesa = async (table_id: number) => {
 
 #tablaMesas {
   @media screen and (min-width: 1024px) {
-  width: 75%;
+    width: 75%;
   }
 }
 
