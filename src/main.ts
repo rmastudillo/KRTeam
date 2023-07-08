@@ -3,6 +3,7 @@ import { router } from "@/router";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
+import { useUserStore } from "./stores/userStore";
 
 import "@/assets/styles/tailwind.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -14,7 +15,10 @@ const app = createApp(App);
 // USE PINIA
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+
 app.use(pinia);
 app.use(router);
 
+const userStore = useUserStore();
+userStore.loadFromLocalStorage();
 app.mount("#app");

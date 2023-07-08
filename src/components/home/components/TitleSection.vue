@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
 const campos = ref([
   { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
@@ -15,6 +16,12 @@ const handleSubmit = (e: any) => {
   e.preventDefault();
   console.log(e);
 };
+
+const router = useRouter();
+
+const redirigirMapa = () => {
+  router.push('/local');
+};
 </script>
 <template>
   <div class="title-container">
@@ -26,7 +33,7 @@ const handleSubmit = (e: any) => {
       reserva con nosotros en sencillo pasos, tan solo regístrate, busca tu
       restaurant, reserva y listo!
     </h2>
-    <button type="button" class="btn bg-white btn-lg text-center">
+    <button type="button" class="btn bg-white btn-lg text-center" @click="redirigirMapa">
       <span class="mx-2 text-3xl">Reserva</span>
       <i class="bi bi-geo-alt-fill text-3xl" />
     </button>
@@ -41,7 +48,7 @@ const handleSubmit = (e: any) => {
       ratos en tiempos de espera y reserva con nosotros.
     </h3>
   </div>
-  <div class="flex flex-col lg:flex-row lg:max-h-min">
+  <div class="flex flex-col lg:flex-row lg:max-h-min w-full">
     <div class="inline-flex justify-center">
       <img :src="restobarLanding" alt="My SVG Image" />
     </div>
@@ -58,10 +65,9 @@ const handleSubmit = (e: any) => {
       </h3>
     </div>
   </div>
-  <div class="bg-white w-full h-[10vh]"></div>
   <div class="form-main-container">
     <h2 class="form-title">
-      ¿Te interesa usar ReservApppara para potenciar las visitas a tu
+      ¿Te interesa usar ReservApp para potenciar las visitas a tu
       restaurante?
     </h2>
     <h3 class="form-subtitle">
@@ -82,12 +88,12 @@ const handleSubmit = (e: any) => {
           <label :for="campo.id">{{ campo.label }}</label>
         </div>
       </div>
-      <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%]">
+      <div class="inline-flex w-full justify-center px-[5%] lg:px-[10%] mt-10">
         <button
           type="submit"
-          class="btn bg-white btn-lg text-center w-full lg:w-1/2"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          <span class="mx-2 text-3xl">Enviar</span>
+          <span class="mx-3 text-2xl">Enviar</span>
         </button>
       </div>
     </form>
@@ -145,6 +151,7 @@ const handleSubmit = (e: any) => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
 @media screen and (min-width: 1024px) {
@@ -231,7 +238,8 @@ const handleSubmit = (e: any) => {
   gap: 1rem;
   padding-inline: 5%;
   padding-block: 10%;
-  background-color: #72caba;
+  background-color: #fff;
+  width: 100%;
 }
 
 @media screen and (min-width: 1024px) {
@@ -247,7 +255,7 @@ const handleSubmit = (e: any) => {
   font-size: 30px;
   line-height: 35px;
   text-align: center;
-  color: #ffffff;
+  color: #000;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -265,7 +273,7 @@ const handleSubmit = (e: any) => {
   font-size: 20px;
   line-height: 25px;
   text-align: center;
-  color: #ffffff;
+  color: #000;
 }
 
 @media screen and (min-width: 1024px) {
