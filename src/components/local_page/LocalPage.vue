@@ -189,23 +189,6 @@ const locales = [
   },
 ] as Array<Local>;
 
-let fetches = locales.map((local) => {
-  const fullAddress = `${local.address}, ${local.commune}, ${local.region}`;
-
-  return fetch(
-    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-      fullAddress
-    )}&format=json`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      if (data && data.length > 0) {
-        local.coordinates[0] = parseFloat(data[0].lat);
-        local.coordinates[1] = parseFloat(data[0].lon);
-      }
-    });
-});
-
 // Define los iconos personalizados
 const gpsIcon = L.icon({
   iconUrl: imggps,
@@ -220,19 +203,36 @@ const localIcon = L.icon({
 onMounted(async () => {
   try {
     // Obtener Los Locales
-    const response = await fetch("http://35.232.169.75/api/v1/restobars/");
+    const response = await fetch("http://34.172.76.188/api/v1/restobars/");
     if (response.ok) {
       solicitudes.value = await response.json();
-      console.log(solicitudes.value);
+      await Promise.all(
+        solicitudes.value.map(async (local) => {
+          const fullAddress = `${local.address}, ${local.commune}, ${local.region}`;
+          const addressResponse = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+              fullAddress
+            )}&format=json`
+          );
+          const addressData = await addressResponse.json();
+          if (addressData && addressData.length > 0) {
+            console.log(
+              addressData,
+              "acaaa",
+              addressData && addressData.length > 0
+            );
+            local.coordinates = [0, 0];
+            local.coordinates[0] = parseFloat(addressData[0].lat);
+            local.coordinates[1] = parseFloat(addressData[0].lon);
+          }
+        })
+      );
     } else {
       console.error("No se pudo obtener las reservas");
-      console.log(solicitudes.value);
     }
   } catch (error) {
     console.error("Error tratando de obtener las reservas:", error);
-  }
-
-  Promise.all(fetches).then(() => {
+  } finally {
     // Esperamos que se transformen todas las direcciones en latitud, longitud
     modalReserva.value = new Modal(infoModal.value);
     if (navigator.geolocation) {
@@ -246,7 +246,8 @@ onMounted(async () => {
         }).addTo(map?.value);
 
         // Añade un marcador para cada local
-        locales.forEach((local) => {
+        solicitudes.value.forEach((local) => {
+          console.log(local.coordinates, "local");
           L.marker(
             {
               lat: local.coordinates[0],
@@ -278,7 +279,7 @@ onMounted(async () => {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
-  });
+  }
 });
 </script>
 <template>
