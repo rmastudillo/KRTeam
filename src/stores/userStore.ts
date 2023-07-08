@@ -1,6 +1,35 @@
 import { setClientToken } from "@/api/client";
-import { getBooking, getUserInfo, postBooking } from "@/api/modules/common";
+import {
+  getBooking,
+  getRestobarRequests,
+  getRestobars,
+  getUserInfo,
+  postBooking,
+} from "@/api/modules/common";
 import { defineStore } from "pinia";
+
+export interface Local {
+  name: string;
+  address: string;
+  unit_number: number;
+  commune: string;
+  region: string;
+  id: number;
+  owner_id: number;
+  tables: Array<number>;
+  coordinates: Array<number>;
+  menu_url: string;
+}
+export interface LocalRequest {
+  name: string;
+  owner_email: string;
+  address: string;
+  unit_number: number;
+  commune: string;
+  region: string;
+  status: string;
+  id: number;
+}
 
 interface User {
   email: string;
@@ -8,7 +37,7 @@ interface User {
   is_active: boolean;
   is_superuser: boolean;
   is_restobar_owner: boolean;
-  restobars: any[];
+  restobars: Local[];
 }
 
 interface Booking {
@@ -33,6 +62,8 @@ export const useUserStore = defineStore({
     loading: false,
     userInfo: {} as User,
     userBooking: [] as Booking[],
+    adminRestobar: [] as Local[],
+    adminRestobarRequest: [] as LocalRequest[],
   }),
   getters: {
     getToken(): string {
@@ -49,7 +80,7 @@ export const useUserStore = defineStore({
     },
     user(): User {
       return this.userInfo;
-    }
+    },
   },
   actions: {
     setToken(userToken: string): void {
@@ -86,14 +117,38 @@ export const useUserStore = defineStore({
       }
       this.loading = false;
     },
-    async postBooking(booking: Booking, Localid:number) {
+    async postBooking(booking: Booking, Localid: number) {
       this.loading = true;
       try {
         const response = await postBooking(booking, Localid);
         this.userBooking = response.data;
-        console.log(response, "bocking");
       } catch (error) {
         console.error("Error al realizar la reserva:", error);
+      }
+      this.loading = false;
+    },
+
+    async adminGetRestobar() {
+      this.loading = true;
+      this.adminRestobar = [];
+      try {
+        const response = await getRestobars();
+        this.adminRestobar = response.data;
+      } catch (error) {
+        console.error("Error tratando de obtener los locales:", error);
+      }
+      this.loading = false;
+    },
+
+    async adminGetRestobarRequest() {
+      this.loading = true;
+      this.adminRestobarRequest = [];
+      try {
+        // Obtener información de usuario
+        const response = await getRestobarRequests();
+        this.adminRestobarRequest = response.data;
+      } catch (error) {
+        console.error("Error tratando de obtener las reservas:", error);
       }
       this.loading = false;
     },

@@ -3,12 +3,12 @@ import { router } from "@/router";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { createApp } from "vue";
+import { useUserStore } from "./stores/userStore";
 
 import "@/assets/styles/tailwind.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.js";
-import { useUserStore } from "./stores/userStore";
 
 const app = createApp(App);
 
