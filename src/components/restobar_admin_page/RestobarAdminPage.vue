@@ -6,7 +6,19 @@ const userStore = useUserStore();
 
 onMounted(() => {
   userStore.getMyRestobarsBooking();
+  // Obtener mesas
 });
+
+const mesas = ref<
+  Array<{
+    name: string;
+    capacity: number;
+    is_smoking_allowed: boolean;
+    id: number;
+    restobar_id: number;
+    status: string;
+  }>
+>([]);
 
 const reservas = ref<
   Array<{
@@ -33,17 +45,108 @@ const reservas = ref<
 //   }
 // });
 
-const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
+const fieldsMesas = ["Id", "Nombre", "Capacidad", "¿Se puede fumar?", "Estado", " "];
+const fieldsReservas = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
+
+
+const inputNombre = ref();
+const inputCapacidad = ref();
+const inputFumadores = ref();
+
+const crearMesa = async (event: any) => {
+  // Llamar al post de mesas (falta el id del local)
+}
+
+const eliminarMesa = async (table_id: number) => {
+  // Llamar al delete de mesas (falta el id del local)
+}
+
+
 </script>
 
 <template>
   <h1 id="titulo">
     {{
       userStore.myRestobars
-        ? ` ADMINISTRADOR RESTOBAR ${userStore.myRestobars[0].name}`
+        ? ` ADMINISTRADOR RESTOBAR: ${userStore.myRestobars[0].name}`
         : "No hay restobares"
     }}
   </h1>
+  <!-- Tabla de las mesas -->
+  <div id="contenedorMesas" class="w-full">
+    <form id="formMesa" class="w-full"  @submit="crearMesa">
+      <h2 class="nombreTabla">Agregar una Mesa</h2>
+      <div class="form-element">
+        <p>Nombre de la mesa:</p>
+        <input
+          class="text"
+          v-model="inputNombre"
+          placeholder="Nombre de la mesa"
+          required
+        />
+      </div>
+
+      <div class="form-element">
+        <p>Capacidad máxima de la mesa:</p>
+        <input
+          class="text"
+          v-model="inputCapacidad"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          placeholder=""
+          required
+        />
+      </div>
+
+      <div class="form-element">
+        <p>Mesa para fumadores?</p>
+        <input type="checkbox" v-model="inputFumadores" />
+      </div>
+
+      <button
+        type="submit"
+        class="boton-crear-mesa"
+        onclick="event => crearMesa(event)"
+      >
+        Crear Mesa
+      </button>
+    </form>
+    <div id="tablaMesas" class="w-full">
+      <h2 class="nombreTabla">Mesas del Restobar</h2>
+      <hr />
+      <div class="accionesTabla">
+        <div class="accion"><button>Refresh</button></div>
+        <div class="accion"><button>Export reservas</button></div>
+      </div>
+      <div class="containerTabla">
+        <table class="tabla table">
+          <thead>
+            <tr>
+              <!-- loop through each value of the fields to get the table header -->
+              <th
+                v-for="field in fieldsMesas"
+              >
+                {{ field }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loop through the list get the each student data -->
+            <tr v-for="item in mesas" :key="item.id">
+              <td>{{ item.id }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.capacity }}</td>
+              <td>{{ item.is_smoking_allowed ? "Si" : "No"  }}</td>
+              <td>{{ item.status }}</td>
+              <td><button @click="eliminarMesa(item.id)">Eliminar mesa</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tabla de las reservas -->
   <div id="tablaReservas" class="w-full">
     <h2 class="nombreTabla">Reservas</h2>
     <hr />
@@ -89,6 +192,35 @@ const fields = ["Id", "Mesa", "Número de personas", "Fecha", "Hora", " "];
   width: 100%;
 }
 
+#contenedorMesas {
+  @media screen and (min-width: 1024px) {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#formMesa {
+  text-align: center;
+}
+
+.form-element {
+  margin-top: 0%;
+  margin-bottom: 1%;
+}
+
+.form-element p {
+  margin-bottom: 5px;
+}
+
+.form-element .text {
+  border: 2px solid black;
+  padding: 1px 3px;
+}
+
+.boton-crear-mesa {
+  border: 2px solid black;
+  padding: 1px 3px;
+}
 .nombreTabla {
   margin-top: 2%;
   margin-left: 2%;
