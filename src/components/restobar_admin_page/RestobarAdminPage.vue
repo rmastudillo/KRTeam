@@ -201,6 +201,15 @@ const eliminarMesa = async (table_id: number) => {
 
 #formMesa {
   text-align: center;
+  @media screen and (min-width: 1024px) {
+    width: 25%;
+  }
+}
+
+#tablaMesas {
+  @media screen and (min-width: 1024px) {
+  width: 75%;
+  }
 }
 
 .form-element {
