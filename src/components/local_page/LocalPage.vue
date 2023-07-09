@@ -556,6 +556,10 @@ onMounted(async () => {
     justify-content: center; /* Centrar horizontalmente */
   }
 }
+.select {
+  margin-left: 5px;
+  margin-right: 5px;
+}
 
 #elementosInferiores .modal-element {
   @media screen and (min-width: 1024px) {
