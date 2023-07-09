@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { patchRestobarRequest, postRestobar, deleteRestobarById } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
-import { onMounted } from "vue";
+import { onMounted , ref} from "vue";
 
 const userStore = useUserStore();
+
+const isLoading = ref(true);
 
 onMounted(async () => {
   userStore.adminGetRestobar();
@@ -61,16 +63,33 @@ const handleAcept = (item: any) => {
     }
     console.log(data, "stoy mandando esto")
     postRestobar(data);
-  } catch (error) {
+  } 
+  catch (error) {
     console.log(error);
   }
 };
+
+onMounted(async () => { // Espera que terminen las dos peticiones para ocultar el spinner
+  try {
+    await Promise.all([userStore.adminGetRestobar(), userStore.adminGetRestobarRequest()]);
+  } catch (error) {
+    console.error("Hubo un error al recuperar los datos: ", error);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
 </script>
 
 <template>
-  <h1 id="titulo">ADMINISTRADOR</h1>
+  <div v-if="isLoading" class="overlay">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <h1 v-if="!isLoading" id="titulo">ADMINISTRADOR</h1>
 
-  <div id="tablaLocales" class="w-full">
+  <div v-if="!isLoading" id="tablaLocales" class="w-full">
     <h2 class="nombreTabla">Locales Activos</h2>
     <hr />
     <div class="accionesTabla">
@@ -105,7 +124,7 @@ const handleAcept = (item: any) => {
       </table>
     </div>
   </div>
-  <div id="tablaReservas" class="w-full">
+  <div v-if="!isLoading" id="tablaReservas" class="w-full">
     <h2 class="nombreTabla">Solicitudes de local</h2>
     <hr />
     <div class="accionesTabla">
@@ -199,5 +218,19 @@ const handleAcept = (item: any) => {
   margin-bottom: 10%;
   width: 100%;
   overflow-x: auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
