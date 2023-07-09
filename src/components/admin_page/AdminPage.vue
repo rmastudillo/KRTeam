@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { patchRestobarRequest, postRestobar } from "@/api/modules/common";
+import { patchRestobarRequest, postRestobar, deleteRestobarById } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
 import { onMounted } from "vue";
 
@@ -30,6 +30,14 @@ const fields2 = [
   "Estado de solicitud",
   " ",
 ];
+
+const handleDelete = (id: number) => {
+  try {
+    deleteRestobarById(id);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const handleReject = (id: number) => {
   try {
@@ -90,7 +98,8 @@ const handleAcept = (item: any) => {
             <td>{{ item.commune }}</td>
             <td>{{ item.address }}</td>
             <td>{{ item.unit_number }}</td>
-            <td><button>ICONO EDITAR</button></td>
+            <!-- <td><button class="btn btn-secondary">EDITAR</button></td> -->
+            <td><button class="btn btn-danger" @click="handleDelete(item.id)">ELIMINAR</button></td>
           </tr>
         </tbody>
       </table>
@@ -126,8 +135,8 @@ const handleAcept = (item: any) => {
             <td>{{ item.owner_email }}</td>
             <td>{{ item.status }}</td>
             <td>
-              <button @click="handleAcept(item)">ACEPTAR</button
-              ><button @click="handleReject(item.id)">RECHAZAR</button>
+              <button class="btn btn-success" @click="handleAcept(item)">ACEPTAR</button
+              ><button class="btn btn-danger" @click="handleReject(item.id)">RECHAZAR</button>
             </td>
           </tr>
         </tbody>
@@ -170,6 +179,11 @@ const handleAcept = (item: any) => {
   width: 95%;
   border-collapse: collapse;
   font-size: 15px;
+}
+
+.tabla button {
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 @media screen and (min-width: 1024px) {
