@@ -145,7 +145,7 @@ export const useUserStore = defineStore({
       this.managerRestobarBooking = [];
       try {
         // Obtener información de usuario
-        this.getInfo();
+        await this.getInfo();
         if (this.user.restobars.length > 0) {
           const table_id = this.user.restobars[0].id;
           const response = await getReservations(table_id);

@@ -19,12 +19,7 @@ const register = async () => {
 
   try {
     const response = await client.post(
-      `/api/v1/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`,
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
+      `/api/v1/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`
     );
     userStore.setToken(response.data.access_token);
     userStore.setIsAppAdmin(response.data.is_superuser);
@@ -35,8 +30,11 @@ const register = async () => {
     else {
       router.push({ name: "Local" });
     }
-  } catch {
-    alert("Registro exitoso!");
+  } catch (error: any) {
+    alert(
+      `Hubo un problema con el registro porfavor verifica los datos ingresados: ,${error.response.data.detail}`
+    );
+    console.log(error);
   }
 };
 </script>

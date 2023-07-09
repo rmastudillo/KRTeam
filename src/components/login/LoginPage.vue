@@ -10,8 +10,6 @@ const userStore = useUserStore();
 let email = ref("");
 let password = ref("");
 
-const url = `${API_HOST}/api/v1/login`;
-
 const login = async () => {
   const data = new URLSearchParams();
   data.append("grant_type", "");
@@ -32,6 +30,7 @@ const login = async () => {
     userStore.setIsRestobarAdmin(responseData.is_restobar_owner);
     userStore.setIsLogged(true);
     alert("Inicio de sesión exitoso!");
+    await userStore.getInfo();
     if (responseData.is_superuser) router.push({ name: "Admin" });
     else {
       router.push({ name: "Local" });

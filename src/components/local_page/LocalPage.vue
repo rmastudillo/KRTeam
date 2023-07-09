@@ -72,17 +72,14 @@ const hours = [
   "00",
 ];
 
-const hours2 = [
-  "01",
-  "02",
-  "03"
-];
+const hours2 = ["01", "02", "03"];
 const availableMinutes = ["00", "15", "30", "45"];
 
-const verificarDuracion = ( // Ya no se verificara que la reserva dure 30 minutos a 3 horas
+const verificarDuracion = (
+  // Ya no se verificara que la reserva dure 30 minutos a 3 horas
   startHour: number,
   startMinute: number,
-  endHour: number,
+  endHour: number
 ) => {
   let totalMinutos = 0;
   // Le sumo los minutos dada la diferencia de horas
@@ -119,19 +116,25 @@ const crearReserva = async (event: any) => {
     ) {
       errors.value.duracion =
         "La duración de la reserva debe ser entre 30 minutos y 3 horas";
-        alert(
-          "La duración de la reserva debe ser entre 30 minutos y 3 horas"
-    )
+      alert("La duración de la reserva debe ser entre 30 minutos y 3 horas");
     }
     if (Object.keys(errors.value).length === 0) {
       const reservaData = {
         people: parseInt(textInput.value),
         start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-        end_time: `${selectedDate.value}T${startHour.value + endHour.value}:${startMinute.value}:00.000Z`,
+        end_time: `${selectedDate.value}T${startHour.value + endHour.value}:${
+          startMinute.value
+        }:00.000Z`,
         for_smokers: fumadores.value ? true : false,
       } as any;
-      console.log(`${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`);
-      console.log(`${selectedDate.value}T${(Number(startHour.value) + Number(endHour.value)).toString()}:${startMinute.value}:00.000Z`);
+      console.log(
+        `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`
+      );
+      console.log(
+        `${selectedDate.value}T${(
+          Number(startHour.value) + Number(endHour.value)
+        ).toString()}:${startMinute.value}:00.000Z`
+      );
       await userStore.postBooking(reservaData, Localid.value);
       alert("La reserva ha sido creada con éxito");
       modalReserva.value.hide();
@@ -185,7 +188,6 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
-          console.log(local,addressData);
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -217,7 +219,6 @@ onMounted(async () => {
             // El local debe tener por lo menos 1 mesa disponible
             return;
           }
-          console.log(local.coordinates[0]);
           L.marker(
             {
               lat: local.coordinates[0],
