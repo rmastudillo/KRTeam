@@ -6,7 +6,6 @@ import { onMounted, onUnmounted, reactive } from "vue";
 
 const testStore = useTestStore();
 const modifica = () => {
-  console.log(1);
   testStore.setTest("Modifiqué el teststore usando el método Test");
   console.log(testStore.getTest);
 };
@@ -42,7 +41,7 @@ const variableee = ref("");
           placeholder="Search"
           aria-label="Search"
         />
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <button class="btn btn-outline-success " type="submit">Search</button>
       </form>
     </div>
   </nav>
@@ -50,7 +49,7 @@ const variableee = ref("");
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Navbar</a>
       <button
-        class="navbar-toggler"
+        class="navbar-toggler "
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarNav"

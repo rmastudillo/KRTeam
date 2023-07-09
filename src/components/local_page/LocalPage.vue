@@ -2,7 +2,8 @@
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
-import { Local, useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
+import { API_HOST } from "@/utils/constants";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
@@ -103,34 +104,36 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-
-  if (
-    !verificarDuracion(
-      parseInt(startHour.value),
-      parseInt(startMinute.value),
-      parseInt(endHour.value),
-      parseInt(endMinute.value)
-    )
-  ) {
-    errors.value.duracion =
-      "La duración de la reserva debe ser entre 30 minutos y 3 horas";
-  }
-
-  if (Object.keys(errors.value).length === 0) {
-    const reservaData = {
-      people: parseInt(textInput.value),
-      start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-      end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
-      for_smokers: fumadores.value ? true : false,
-    } as any;
-
-    //console.log(reservaData);
-
-    try {
-      userStore.postBooking(reservaData, Localid.value);
-    } catch (error) {
-      console.error("Error al realizar la reserva:", error);
+  console.log(1);
+  try {
+    if (
+      !verificarDuracion(
+        parseInt(startHour.value),
+        parseInt(startMinute.value),
+        parseInt(endHour.value),
+        parseInt(endMinute.value)
+      )
+    ) {
+      errors.value.duracion =
+        "La duración de la reserva debe ser entre 30 minutos y 3 horas";
     }
+    console.log(2);
+    if (Object.keys(errors.value).length === 0) {
+      const reservaData = {
+        people: parseInt(textInput.value),
+        start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
+        end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+        for_smokers: fumadores.value ? true : false,
+      } as any;
+
+      await userStore.postBooking(reservaData, Localid.value);
+      alert("La reserva ha sido creada con éxito");
+      modalReserva.value.hide();
+    }
+    console.log(errors.value);
+  } catch (error) {
+    console.log(error);
+    alert("Error al realizar la reserva, porfavor intentelo más tarde");
   }
 };
 
@@ -163,9 +166,8 @@ const localIcon = L.icon({
 
 onMounted(async () => {
   try {
-    console.log(userStore.loading);
     // Obtener Los Locales
-    const response = await fetch("http://34.172.76.188/api/v1/restobars/");
+    const response = await fetch(API_HOST + "/api/v1/restobars/");
     if (response.ok) {
       solicitudes.value = await response.json();
       await Promise.all(
@@ -187,16 +189,9 @@ onMounted(async () => {
     } else {
       console.error("No se pudo obtener las reservas");
     }
-  } 
-  
-  
-  catch (error) {
+  } catch (error) {
     console.error("Error tratando de obtener las reservas:", error);
-  } 
-  
-  
-  finally {
-    isLoading.value = false;
+  } finally {
     // Esperamos que se transformen todas las direcciones en latitud, longitud
     modalReserva.value = new Modal(infoModal.value);
     if (navigator.geolocation) {
@@ -211,7 +206,10 @@ onMounted(async () => {
 
         // Añade un marcador para cada local
         solicitudes.value.forEach((local) => {
-          console.log(local.coordinates, "local");
+          if (local.tables.length === 0) {
+            // El local debe tener por lo menos 1 mesa disponible
+            return;
+          }
           L.marker(
             {
               lat: local.coordinates[0],
@@ -240,149 +238,161 @@ onMounted(async () => {
           .bindPopup("Tu Ubicación")
           .openPopup();
       });
+
+      isLoading.value = false;
     } else {
       alert("Geolocation is not supported by this browser.");
     }
   }
+  isLoading.value = false;
 });
 </script>
 <template>
-    <div v-if="isLoading" class="overlay">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+  <div v-if="isLoading" class="overlay">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-    <div v-if="isLoading" class="modal fade" ref="infoModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 id="infoModalLabel">Crea tu reserva</h5>
-            <button
-              type="button"
-              class="btn-close"
-              @click="modalReserva.hide()"
-              aria-label="Close"
-            ></button>
-          </div>
-          <form @submit="crearReserva">
-            <div class="modal-body">
-              <div class="modal-element" id="contenedorCalendario">
-                <p>Selecciona la fecha:</p>
-                <input
-                  type="date"
-                  v-model="selectedDate"
-                  :min="fechaMinima"
-                  required
-                />
-              </div>
-              <div class="modal-element" id="contenedorPersonas">
-                <p>Número de personas:</p>
-                <input
-                  class="text"
-                  v-model="textInput"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <div id="elementosInferiores">
-                <div class="modal-element">
-                  <p>Horario Inicio:</p>
-                  <div class="container">
-                    <select v-model="startHour" class="select" required>
-                      <option value="" disabled>Selecciona Hora</option>
-                      <option v-for="hour in hours" :value="hour">
-                        {{ hour }} horas
-                      </option>
-                    </select>
-
-                    <select v-model="startMinute" class="select" required>
-                      <option value="" disabled>Selecciona Minutos</option>
-                      <option v-for="minute in availableMinutes" :value="minute">
-                        {{ minute }} minutos
-                      </option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="modal-element">
-                  <p>Horario Finalización:</p>
-                  <div class="container">
-                    <select v-model="endHour" class="select" required>
-                      <option value="" disabled>Selecciona Hora</option>
-                      <option v-for="hour in hours" :value="hour">
-                        {{ hour }} horas
-                      </option>
-                    </select>
-
-                    <select v-model="endMinute" class="select" required>
-                      <option value="" disabled>Selecciona Minutos</option>
-                      <option v-for="minute in availableMinutes" :value="minute">
-                        {{ minute }} minutos
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <span v-if="errors.duracion" class="error-message">{{
-                errors.duracion
-              }}</span>
-              <div class="modal-element" id="contenedorFumadores">
-                <p>Mesa para fumadores?</p>
-                <input type="checkbox" v-model="fumadores" />
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="submit"
-                class="boton-crear-reserva"
-                onclick="event => crearReserva(event)"
-              >
-                RESERVAR
-              </button>
-            </div>
-          </form>
+  </div>
+  <div
+    v-if="isLoading"
+    class="modal fade"
+    ref="infoModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="infoModalLabel">Crea tu reserva</h5>
+          <button
+            type="button"
+            class="btn-close"
+            @click="modalReserva.hide()"
+            aria-label="Close"
+          ></button>
         </div>
-      </div>
-    </div>
-    <div class="map-container">
-      <div id="mapid"></div>
-    </div>
+        <form @submit="crearReserva">
+          <div class="modal-body">
+            <div class="modal-element" id="contenedorCalendario">
+              <p>Selecciona la fecha:</p>
+              <input
+                type="date"
+                v-model="selectedDate"
+                :min="fechaMinima"
+                required
+              />
+            </div>
+            <div class="modal-element" id="contenedorPersonas">
+              <p>Número de personas:</p>
+              <input
+                class="text"
+                v-model="textInput"
+                type="number"
+                min="1"
+                max="10"
+                pattern="[0-9]*"
+                placeholder=""
+                required
+              />
+            </div>
+            <div id="elementosInferiores">
+              <div class="modal-element">
+                <p>Horario Inicio:</p>
+                <div class="container">
+                  <select v-model="startHour" class="select" required>
+                    <option value="" disabled>Selecciona Hora</option>
+                    <option v-for="hour in hours" :value="hour">
+                      {{ hour }} horas
+                    </option>
+                  </select>
 
-    <div v-if="!isLoading"
-      id="container-local"
-      class="flex flex-col lg:flex-row lg:max-h-min w-full"
-    >
-      <div id="container-img" class="inline-flex justify-center">
-        <img :src="imglocal" alt="My SVG Image" />
-      </div>
+                  <select v-model="startMinute" class="select" required>
+                    <option value="" disabled>Selecciona Minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">
+                      {{ minute }} minutos
+                    </option>
+                  </select>
+                </div>
+              </div>
 
-      <div id="container-text1" class="card-container flex-1">
-        <div id="container-text2">
-          <h2 id="tittlel" v-text="Localname"></h2>
-          <div id="subtitlel">
-            <p v-text="`Nombre: ${Localname}`"></p>
-            <p v-text="`Dirección: ${Localdirection}`"></p>
-            <p v-text="`Comuna: ${Localcommune}`"></p>
-            <p v-text="`Región: ${Localregion}`"></p>
+              <div class="modal-element">
+                <p>Horario Finalización:</p>
+                <div class="container">
+                  <select v-model="endHour" class="select" required>
+                    <option value="" disabled>Selecciona Hora</option>
+                    <option v-for="hour in hours" :value="hour">
+                      {{ hour }} horas
+                    </option>
+                  </select>
+
+                  <select v-model="endMinute" class="select" required>
+                    <option value="" disabled>Selecciona Minutos</option>
+                    <option v-for="minute in availableMinutes" :value="minute">
+                      {{ minute }} minutos
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <span v-if="errors.duracion" class="error-message">{{
+              errors.duracion
+            }}</span>
+            <div class="modal-element" id="contenedorFumadores">
+              <p>Mesa para fumadores?</p>
+              <input type="checkbox" v-model="fumadores" />
+            </div>
           </div>
-
-          <div id="button-container">
+          <div class="modal-footer">
             <button
-              id="button-reservar"
-              type="button"
-              class="btn btn-lg text-center"
-              @click="modalReserva.show()"
+              type="submit"
+              class="boton-crear-reserva btn btn-secondary"
+              @onclick="crearReserva($event)"
             >
-              <span class="mx-2 text-3xl">Reserva</span>
-              <i class="bi bi-geo-alt-fill text-3xl"></i>
+              RESERVAR
             </button>
           </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="map-container">
+    <div id="mapid"></div>
+  </div>
+
+  <div
+    v-if="!isLoading"
+    id="container-local"
+    class="flex flex-col lg:flex-row lg:max-h-min w-full"
+  >
+    <div id="container-img" class="inline-flex justify-center">
+      <img :src="imglocal" alt="My SVG Image" />
+    </div>
+
+    <div id="container-text1" class="card-container flex-1">
+      <div id="container-text2">
+        <h2 id="tittlel" v-text="Localname"></h2>
+        <div id="subtitlel">
+          <p v-text="`Nombre: ${Localname}`"></p>
+          <p v-text="`Dirección: ${Localdirection}`"></p>
+          <p v-text="`Comuna: ${Localcommune}`"></p>
+          <p v-text="`Región: ${Localregion}`"></p>
+        </div>
+
+        <div id="button-containe">
+          <button
+            id="button-reservar"
+            type="button"
+            class="btn btn-lg text-center"
+            :disabled="!Localdirection"
+            @click="modalReserva.show()"
+          >
+            <span class="mx-2 text-3xl">Reserva</span>
+            <i class="bi bi-geo-alt-fill text-3xl"></i>
+          </button>
         </div>
       </div>
     </div>
-
+  </div>
 </template>
 
 <style lang="css" scoped>

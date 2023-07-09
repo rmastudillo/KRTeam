@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { patchReservations } from "@/api/modules/common";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const reserva = ref({
@@ -11,6 +12,9 @@ const reserva = ref({
   for_smokers: false,
   status: "Pending",
 });
+
+const startTimeData = ref();
+const endTimeData = ref();
 
 const router = useRouter();
 
@@ -57,6 +61,8 @@ onMounted(async () => {
 
     const startDate = new Date(reserva.value.start_time);
     const endDate = new Date(reserva.value.end_time);
+    startTimeData.value = new Date(reserva.value.start_time);
+    endTimeData.value = new Date(reserva.value.end_time);
 
     const mes_inicio = String(startDate.getMonth()).padStart(2, "0");
     const dia_inicio = String(startDate.getDate()).padStart(2, "0");
@@ -93,25 +99,19 @@ const HandleButtonCancelarReserva = () => {
 };
 
 const cancelarReserva = async () => {
-  reserva.value.status = "Rejected";
   try {
-    // Cancelar reserva
-    const response = await fetch(
-      `http://35.232.169.75/api/v1/reservations/${id}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(reserva.value),
-      }
+    reserva.value.status = "Canceled";
+    const { end_time, start_time, ...rest } = reserva.value;
+    await patchReservations(
+      { end_time: endTimeData.value, start_time: startTimeData.value, ...rest },
+      Number(id)
     );
-    if (response.ok) {
-      console.log("Se ha cancelado la reserva correctamente");
-      alert("Se ha cancelado la reserva correctamente");
-      router.push("/");
-    } else {
-      console.error("No se pudo cancelar la reserva");
-      alert("No se pudo cancelar la reserva");
-    }
+    // Cancelar reserva
+    console.log("Se ha cancelado la reserva correctamente");
+    alert("Se ha cancelado la reserva correctamente");
+    router.push("/");
   } catch (error) {
+    alert("No se pudo cancelar la reserva");
     console.error("Error tratando de cancelar la reserva:", error);
   }
 };
@@ -151,7 +151,9 @@ const cancelarReserva = async () => {
       </div>
       <div id="botones">
         <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
-        <button class="btn" @click="HandleButtonCancelarReserva">Cancelar Reserva</button>
+        <button class="btn" @click="HandleButtonCancelarReserva">
+          Cancelar Reserva
+        </button>
       </div>
     </div>
   </div>
@@ -215,6 +217,22 @@ const cancelarReserva = async () => {
 @media screen and (min-width: 1024px) {
   #botones button {
     width: 25%;
+  }
+}
+
+. {
+  animation: buttonAnimation 0.3s;
+}
+
+@keyframes buttonAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
