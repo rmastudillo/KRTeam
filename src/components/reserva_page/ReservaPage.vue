@@ -219,20 +219,4 @@ const cancelarReserva = async () => {
     width: 25%;
   }
 }
-
-. {
-  animation: buttonAnimation 0.3s;
-}
-
-@keyframes buttonAnimation {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 </style>
