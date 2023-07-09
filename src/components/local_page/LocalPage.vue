@@ -105,7 +105,6 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-  console.log(1);
   try {
     if (
       !verificarDuracion(
@@ -119,29 +118,22 @@ const crearReserva = async (event: any) => {
       alert("La duración de la reserva debe ser entre 30 minutos y 3 horas");
     }
     if (Object.keys(errors.value).length === 0) {
-      const reservaData = {
-        people: parseInt(textInput.value),
-        start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-        end_time: `${selectedDate.value}T${startHour.value + endHour.value}:${
-          startMinute.value
-        }:00.000Z`,
-        for_smokers: fumadores.value ? true : false,
-      } as any;
-      console.log(
+      const start_time = new Date(
         `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`
       );
-      console.log(
-        `${selectedDate.value}T${(
-          Number(startHour.value) + Number(endHour.value)
-        ).toString()}:${startMinute.value}:00.000Z`
-      );
+      const end_time = new Date(start_time.getTime());
+      end_time.setHours(start_time.getHours() + parseInt(endHour.value));
+      const reservaData = {
+        people: parseInt(textInput.value),
+        start_time,
+        end_time,
+        for_smokers: fumadores.value ? true : false,
+      } as any;
       await userStore.postBooking(reservaData, Localid.value);
       alert("La reserva ha sido creada con éxito");
       modalReserva.value.hide();
     }
-    console.log(errors.value);
   } catch (error) {
-    console.log(error);
     alert("Error al realizar la reserva, porfavor intentelo más tarde");
   }
 };
