@@ -6,13 +6,14 @@ const userStore = useUserStore();
 
 const getData = async () => {
   await userStore.getMyRestobarsBooking();
-  if (userStore.myRestobars) {
+  
+  if (userStore.userInfo.restobars.length > 0 && userStore.myRestobars) {
     await userStore.managerGetMyTables(userStore.myRestobars.id);
   }
 };
 onMounted(async () => {
   // Obtener mesas
-  getData();
+  await getData();
 });
 
 const mesas = ref<

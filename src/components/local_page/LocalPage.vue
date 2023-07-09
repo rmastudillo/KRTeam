@@ -32,7 +32,6 @@ const selectedDate = ref();
 const startHour = ref<string>("");
 const startMinute = ref<string>("");
 const endHour = ref<string>("");
-const endMinute = ref<string>("");
 const textInput = ref();
 const fumadores = ref<boolean>();
 const errors = ref<Errors>({});
@@ -72,13 +71,18 @@ const hours = [
   "23",
   "00",
 ];
+
+const hours2 = [
+  "01",
+  "02",
+  "03"
+];
 const availableMinutes = ["00", "15", "30", "45"];
 
-const verificarDuracion = (
+const verificarDuracion = ( // Ya no se verificara que la reserva dure 30 minutos a 3 horas
   startHour: number,
   startMinute: number,
   endHour: number,
-  endMinute: number
 ) => {
   let totalMinutos = 0;
   // Le sumo los minutos dada la diferencia de horas
@@ -88,14 +92,14 @@ const verificarDuracion = (
     totalMinutos += (endHour - (startHour - 24)) * 60;
   }
   // Le sumo los minutos dada la diferencia de minutos
-  totalMinutos += endMinute - startMinute;
+  totalMinutos += 0 - startMinute;
 
   if (totalMinutos > 3 * 60) {
     // No más de 3 horas
-    return false;
+    //return false;
   } else if (totalMinutos < 30) {
     // No menos de 30 min
-    return false;
+    //return false;
   }
 
   return true;
@@ -110,22 +114,24 @@ const crearReserva = async (event: any) => {
       !verificarDuracion(
         parseInt(startHour.value),
         parseInt(startMinute.value),
-        parseInt(endHour.value),
-        parseInt(endMinute.value)
+        parseInt(endHour.value)
       )
     ) {
       errors.value.duracion =
         "La duración de la reserva debe ser entre 30 minutos y 3 horas";
+        alert(
+          "La duración de la reserva debe ser entre 30 minutos y 3 horas"
+    )
     }
-    console.log(2);
     if (Object.keys(errors.value).length === 0) {
       const reservaData = {
         people: parseInt(textInput.value),
         start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-        end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+        end_time: `${selectedDate.value}T${startHour.value + endHour.value}:${startMinute.value}:00.000Z`,
         for_smokers: fumadores.value ? true : false,
       } as any;
-
+      console.log(`${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`);
+      console.log(`${selectedDate.value}T${(Number(startHour.value) + Number(endHour.value)).toString()}:${startMinute.value}:00.000Z`);
       await userStore.postBooking(reservaData, Localid.value);
       alert("La reserva ha sido creada con éxito");
       modalReserva.value.hide();
@@ -179,6 +185,7 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
+          console.log(local,addressData);
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -210,6 +217,7 @@ onMounted(async () => {
             // El local debe tener por lo menos 1 mesa disponible
             return;
           }
+          console.log(local.coordinates[0]);
           L.marker(
             {
               lat: local.coordinates[0],
@@ -316,19 +324,12 @@ onMounted(async () => {
               </div>
 
               <div class="modal-element">
-                <p>Horario Finalización:</p>
+                <p>¿Cuántas Tiempo estarás?</p>
                 <div class="container">
                   <select v-model="endHour" class="select" required>
                     <option value="" disabled>Selecciona Hora</option>
-                    <option v-for="hour in hours" :value="hour">
+                    <option v-for="hour in hours2" :value="hour">
                       {{ hour }} horas
-                    </option>
-                  </select>
-
-                  <select v-model="endMinute" class="select" required>
-                    <option value="" disabled>Selecciona Minutos</option>
-                    <option v-for="minute in availableMinutes" :value="minute">
-                      {{ minute }} minutos
                     </option>
                   </select>
                 </div>
