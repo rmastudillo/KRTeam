@@ -151,7 +151,7 @@ const cancelarReserva = async () => {
       </div>
       <div id="botones">
         <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
-        <button @click="HandleButtonCancelarReserva">Cancelar Reserva</button>
+        <button class="btn" @click="HandleButtonCancelarReserva">Cancelar Reserva</button>
       </div>
     </div>
   </div>
@@ -205,9 +205,6 @@ const cancelarReserva = async () => {
 }
 
 #botones button {
-  margin-bottom: 2%;
-  border-style: solid;
-  border-width: 1px;
   background-color: lightgray;
   border-color: black;
   width: 50%;
