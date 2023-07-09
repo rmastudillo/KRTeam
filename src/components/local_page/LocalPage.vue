@@ -248,10 +248,10 @@ onMounted(async () => {
 </script>
 <template>
     <div v-if="isLoading" class="overlay">
-  <div class="spinner-border" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-</div>
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <div v-if="isLoading" class="modal fade" ref="infoModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
