@@ -1,5 +1,6 @@
 import { setClientToken } from "@/api/client";
 import {
+  deleteTable,
   getBooking,
   getReservations,
   getRestobarRequests,
@@ -69,6 +70,7 @@ export const useUserStore = defineStore({
     adminRestobarRequest: [] as LocalRequest[],
     managerRestobarBooking: [] as any[],
     managerMyTables: [] as any[],
+    error: "",
   }),
   getters: {
     getToken(): string {
@@ -86,8 +88,8 @@ export const useUserStore = defineStore({
     user(): User {
       return this.userInfo;
     },
-    myRestobars(): Local[] {
-      return this.userInfo.restobars;
+    myRestobars(): Local {
+      return this.userInfo.restobars[0];
     },
   },
   actions: {
@@ -113,6 +115,7 @@ export const useUserStore = defineStore({
 
     async getBooking() {
       this.loading = true;
+      this.userBooking = [];
       try {
         // Obtener información de usuario
         const response = await getBooking();
@@ -130,7 +133,8 @@ export const useUserStore = defineStore({
       try {
         const response = await postBooking(booking, Localid);
         this.userBooking = response.data;
-      } catch (error) {
+      } catch (error: any) {
+        alert("Error al realizar la reserva, porfavor intentelo más tarde");
         console.error("Error al realizar la reserva:", error);
       }
       this.loading = false;
@@ -204,6 +208,17 @@ export const useUserStore = defineStore({
       }
       this.loading = false;
     },
+
+    async managerDeleteTable(table_id: number, restobar_id: number) {
+      this.loading = true;
+      try {
+        await deleteTable(table_id, restobar_id);
+      } catch (error) {
+        console.error("Error al realizar la reserva:", error);
+      }
+      this.loading = false;
+    },
+
     setIsAppAdmin(value: boolean): void {
       this.userIsAppAdmin = value;
       localStorage.setItem("userIsAppAdmin", value.toString());

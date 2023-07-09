@@ -4,10 +4,15 @@ import { onMounted, ref } from "vue";
 
 const userStore = useUserStore();
 
-onMounted(() => {
-  userStore.getMyRestobarsBooking();
-  userStore.managerGetMyTables(userStore.myRestobars[0].id);
+const getData = async () => {
+  await userStore.getMyRestobarsBooking();
+  if (userStore.myRestobars) {
+    await userStore.managerGetMyTables(userStore.myRestobars.id);
+  }
+};
+onMounted(async () => {
   // Obtener mesas
+  getData();
 });
 
 const mesas = ref<
@@ -65,15 +70,10 @@ const fieldsReservas = [
 
 const inputNombre = ref();
 const inputCapacidad = ref();
-const inputFumadores = ref();
+const inputFumadores = ref(false);
 
-const crearMesa = (event: any) => {
+const crearMesa = async (event: any) => {
   event.preventDefault();
-
-  console.log(event);
-  console.log(inputNombre.value);
-  console.log(inputCapacidad.value);
-  console.log(inputFumadores.value);
 
   const data = {
     name: inputNombre.value,
@@ -81,16 +81,24 @@ const crearMesa = (event: any) => {
     is_smoking_allowed: !!inputFumadores.value,
   };
   try {
-    userStore.managerAddTable(userStore.myRestobars[0].id, data);
+    await userStore.managerAddTable(userStore.myRestobars.id, data);
+    alert("Se ha creado la mesa correctamente");
   } catch (error) {
-    console.log("errooor", error);
+    alert("Ha ocurrido un error al crear la mesa");
   }
+  getData();
 
   // Llamar al post de mesas (falta el id del local)
 };
 
 const eliminarMesa = async (table_id: number) => {
-  // Llamar al delete de mesas (falta el id del local)
+  try {
+    await userStore.managerDeleteTable(userStore.myRestobars.id, table_id);
+    alert("Se ha eliminado la mesa correctamente");
+  } catch (error) {
+    alert("Ha ocurrido un error al eliminar la mesa");
+  }
+  getData();
 };
 </script>
 
@@ -98,7 +106,7 @@ const eliminarMesa = async (table_id: number) => {
   <h1 id="titulo">
     {{
       userStore.myRestobars
-        ? ` ADMINISTRADOR RESTOBAR: ${userStore.myRestobars[0].name}`
+        ? ` ADMINISTRADOR RESTOBAR: ${userStore.myRestobars.name}`
         : "No hay restobares"
     }}
   </h1>
@@ -132,7 +140,11 @@ const eliminarMesa = async (table_id: number) => {
         <input type="checkbox" v-model="inputFumadores" />
       </div>
 
-      <button type="submit" class="boton-crear-mesa" @click="crearMesa($event)">
+      <button
+        type="submit"
+        class="boton-crear-mesa btn"
+        @click="crearMesa($event)"
+      >
         Crear Mesa
       </button>
     </form>
@@ -140,8 +152,7 @@ const eliminarMesa = async (table_id: number) => {
       <h2 class="nombreTabla">Mesas del Restobar</h2>
       <hr />
       <div class="accionesTabla">
-        <div class="accion"><button>Refresh</button></div>
-        <div class="accion"><button>Export reservas</button></div>
+        <div class="accion"><button @click="getData">Refresh</button></div>
       </div>
       <div class="containerTabla">
         <table class="tabla table">
@@ -162,7 +173,9 @@ const eliminarMesa = async (table_id: number) => {
               <td>{{ item.is_smoking_allowed ? "Si" : "No" }}</td>
               <td>{{ item.status }}</td>
               <td>
-                <button @click="eliminarMesa(item.id)">Eliminar mesa</button>
+                <button class="btn btn-danger" @click="eliminarMesa(item.id)">
+                  Eliminar mesa
+                </button>
               </td>
             </tr>
           </tbody>
@@ -200,7 +213,10 @@ const eliminarMesa = async (table_id: number) => {
             <td>{{ item.people }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.time }}</td>
-            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+            <td>
+              <!-- <button class="btn btn-success">ACEPTAR</button> -->
+              <button class="btn btn-danger">Cancelar reserva</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -248,12 +264,12 @@ const eliminarMesa = async (table_id: number) => {
 
 .form-element .text {
   border: 2px solid black;
-  padding: 1px 3px;
+  padding: 1px 5px;
 }
 
 .boton-crear-mesa {
-  border: 2px solid black;
-  padding: 1px 3px;
+  background-color: lightgray;
+  border-color: black;
 }
 .nombreTabla {
   margin-top: 2%;

@@ -2,7 +2,8 @@
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
-import { Local, useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
+import { API_HOST } from "@/utils/constants";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
@@ -16,6 +17,7 @@ interface Errors {
 }
 
 // Variables del local
+const isLoading = ref(true);
 const Localname = ref("Presiona un Local!");
 const Localdirection = ref("");
 const Localunit_number = ref(0);
@@ -102,34 +104,36 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-
-  if (
-    !verificarDuracion(
-      parseInt(startHour.value),
-      parseInt(startMinute.value),
-      parseInt(endHour.value),
-      parseInt(endMinute.value)
-    )
-  ) {
-    errors.value.duracion =
-      "La duración de la reserva debe ser entre 30 minutos y 3 horas";
-  }
-
-  if (Object.keys(errors.value).length === 0) {
-    const reservaData = {
-      people: parseInt(textInput.value),
-      start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-      end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
-      for_smokers: fumadores.value ? true : false,
-    } as any;
-
-    //console.log(reservaData);
-
-    try {
-      userStore.postBooking(reservaData, Localid.value);
-    } catch (error) {
-      console.error("Error al realizar la reserva:", error);
+  console.log(1);
+  try {
+    if (
+      !verificarDuracion(
+        parseInt(startHour.value),
+        parseInt(startMinute.value),
+        parseInt(endHour.value),
+        parseInt(endMinute.value)
+      )
+    ) {
+      errors.value.duracion =
+        "La duración de la reserva debe ser entre 30 minutos y 3 horas";
     }
+    console.log(2);
+    if (Object.keys(errors.value).length === 0) {
+      const reservaData = {
+        people: parseInt(textInput.value),
+        start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
+        end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+        for_smokers: fumadores.value ? true : false,
+      } as any;
+
+      await userStore.postBooking(reservaData, Localid.value);
+      alert("La reserva ha sido creada con éxito");
+      modalReserva.value.hide();
+    }
+    console.log(errors.value);
+  } catch (error) {
+    console.log(error);
+    alert("Error al realizar la reserva, porfavor intentelo más tarde");
   }
 };
 
@@ -149,46 +153,6 @@ const solicitudes = ref<
   }>
 >([]);
 
-const locales = [
-  {
-    name: "Pollos STEAKS ",
-    address: "Tobalaba 13949",
-    unit_number: 0,
-    commune: "Peñalolén",
-    region: "Metropolitana",
-    menu_url: "",
-    id: 1,
-    owner_id: 3,
-    tables: [],
-    coordinates: [],
-  },
-
-  {
-    name: "Sandwichería STEAKS BURGER",
-    address: "Tobalaba 1300",
-    unit_number: 0,
-    commune: "Peñalolén",
-    region: "Metropolitana",
-    menu_url: "",
-    id: 2,
-    owner_id: 3,
-    tables: [],
-    coordinates: [],
-  },
-  {
-    name: "Pizzeria STEAKS BURGER",
-    address: "Tobalaba 1200",
-    unit_number: 0,
-    commune: "Peñalolén",
-    region: "Metropolitana",
-    menu_url: "",
-    id: 2,
-    owner_id: 3,
-    tables: [],
-    coordinates: [],
-  },
-] as Array<Local>;
-
 // Define los iconos personalizados
 const gpsIcon = L.icon({
   iconUrl: imggps,
@@ -203,7 +167,7 @@ const localIcon = L.icon({
 onMounted(async () => {
   try {
     // Obtener Los Locales
-    const response = await fetch("http://34.172.76.188/api/v1/restobars/");
+    const response = await fetch(API_HOST + "/api/v1/restobars/");
     if (response.ok) {
       solicitudes.value = await response.json();
       await Promise.all(
@@ -216,11 +180,6 @@ onMounted(async () => {
           );
           const addressData = await addressResponse.json();
           if (addressData && addressData.length > 0) {
-            console.log(
-              addressData,
-              "acaaa",
-              addressData && addressData.length > 0
-            );
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
             local.coordinates[1] = parseFloat(addressData[0].lon);
@@ -247,7 +206,10 @@ onMounted(async () => {
 
         // Añade un marcador para cada local
         solicitudes.value.forEach((local) => {
-          console.log(local.coordinates, "local");
+          if (local.tables.length === 0) {
+            // El local debe tener por lo menos 1 mesa disponible
+            return;
+          }
           L.marker(
             {
               lat: local.coordinates[0],
@@ -276,14 +238,28 @@ onMounted(async () => {
           .bindPopup("Tu Ubicación")
           .openPopup();
       });
+
+      isLoading.value = false;
     } else {
       alert("Geolocation is not supported by this browser.");
     }
   }
+  isLoading.value = false;
 });
 </script>
 <template>
-  <div class="modal fade" ref="infoModal" tabindex="-1" aria-hidden="true">
+  <div v-if="isLoading" class="overlay">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div
+    v-if="isLoading"
+    class="modal fade"
+    ref="infoModal"
+    tabindex="-1"
+    aria-hidden="true"
+  >
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
@@ -311,7 +287,9 @@ onMounted(async () => {
               <input
                 class="text"
                 v-model="textInput"
-                inputmode="numeric"
+                type="number"
+                min="1"
+                max="10"
                 pattern="[0-9]*"
                 placeholder=""
                 required
@@ -367,8 +345,8 @@ onMounted(async () => {
           <div class="modal-footer">
             <button
               type="submit"
-              class="boton-crear-reserva"
-              onclick="event => crearReserva(event)"
+              class="boton-crear-reserva btn btn-secondary"
+              @onclick="crearReserva($event)"
             >
               RESERVAR
             </button>
@@ -382,6 +360,7 @@ onMounted(async () => {
   </div>
 
   <div
+    v-if="!isLoading"
     id="container-local"
     class="flex flex-col lg:flex-row lg:max-h-min w-full"
   >
@@ -399,11 +378,12 @@ onMounted(async () => {
           <p v-text="`Región: ${Localregion}`"></p>
         </div>
 
-        <div id="button-container">
+        <div id="button-containe">
           <button
             id="button-reservar"
             type="button"
             class="btn btn-lg text-center"
+            :disabled="!Localdirection"
             @click="modalReserva.show()"
           >
             <span class="mx-2 text-3xl">Reserva</span>
@@ -595,10 +575,23 @@ onMounted(async () => {
     display: flex;
   }
 }
-
 .select {
   overflow-y: auto;
   width: 150px;
   border: 1px solid black;
+}
+
+.overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -4,33 +4,53 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const loading = ref(false);
+
 const campos = ref([
-  { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
-  { id: "address", label: "Dirección", type: "text", valor: "" },
-  { id: "city", label: "Ciudad", type: "text", valor: "" },
-  { id: "capacity", label: "Capacidad (personas)", type: "number", valor: "" },
-  { id: "contactName", label: "Nombre de contacto", type: "text", valor: "" },
-  { id: "email", label: "Correo", type: "email", valor: "" },
-  { id: "phoneNumber", label: "Número de contacto", type: "tel", valor: "" },
+  {
+    id: "name",
+    label: "Nombre Restaurante",
+    type: "text",
+    valor: "",
+    required: true,
+  },
+  { id: "email", label: "Correo", type: "email", valor: "", required: true },
+  {
+    id: "address",
+    label: "Dirección",
+    type: "text",
+    valor: "",
+    required: true,
+  },
+  {
+    id: "unitNumber",
+    label: "Número de local (si aplica)",
+    type: "number",
+    valor: null,
+    required: false,
+  },
+  { id: "commune", label: "Comuna", type: "text", valor: "", required: true },
+  { id: "region", label: "Region", type: "text", valor: "", required: true },
 ]);
+
 const handleSubmit = async (e: any) => {
   e.preventDefault();
   const data = {
     name: campos.value[0].valor,
-    owner_email: campos.value[5].valor,
-    address: campos.value[1].valor,
-    unit_number: null,
-    commune: "Santiago",
-    region: "Metropolitana",
+    owner_email: campos.value[1].valor,
+    address: campos.value[2].valor,
+    unit_number: campos.value[3].valor,
+    commune: campos.value[4].valor,
+    region: campos.value[5].valor,
   };
-  console.log(data);
+
   try {
     await postRestobarRequest(data);
     alert(
       "La solicitud ha sido enviada, nos contactaremos contigo a la brevedad!"
     );
   } catch (error) {
-    console.log(error);
+    alert("Ha ocurrido un error, ese Email ya está en uso.");
   }
 };
 
@@ -103,7 +123,7 @@ const redirigirMapa = () => {
             :key="index"
             v-model="campo.valor"
             class="form-control"
-            required
+            :required="campo.required"
           />
           <label :for="campo.id">{{ campo.label }}</label>
         </div>
@@ -112,6 +132,7 @@ const redirigirMapa = () => {
         <button
           type="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          :disabled="loading"
         >
           <span class="mx-3 text-2xl">Enviar</span>
         </button>

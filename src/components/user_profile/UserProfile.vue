@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { deleteUser } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
 import { table } from "console";
-import { onBeforeMount, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
@@ -9,7 +10,7 @@ const router = useRouter();
 
 const reservas = userStore.userBooking;
 
-onBeforeMount(async () => {
+onMounted(async () => {
   await userStore.getInfo();
   await userStore.getBooking();
 });
@@ -79,17 +80,14 @@ const HandleButtonBorrarCuenta = () => {
 
 const borrarCuenta = async () => {
   try {
-    const response = await fetch("http://35.232.169.75/api/v1/users/me", {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      console.log("Se ha eliminado la cuenta correctamente");
-      router.push("/");
-    } else {
-      console.error("No se pudo eliminar la cuenta");
-    }
-  } catch (error) {
-    console.error("Error tratando de borrar la cuenta:", error);
+    await deleteUser();
+    userStore.logout();
+    alert("Se ha eliminado la cuenta correctamente");
+    router.push("/");
+  } catch (error: any) {
+    alert(
+      `Ha ocurrido un error eliminado la cuenta, porfavor intentelo más tarde`
+    );
   }
 };
 </script>
@@ -114,7 +112,7 @@ const borrarCuenta = async () => {
         <div id="tablaLocales" class="containerTabla">
           <h2 class="nombreTabla">Reservas activas:</h2>
           <hr />
-          <table class="tabla table" v-if="reservas.length !== 0">
+          <table class="tabla table" v-if="reservas.length > 0">
             <thead>
               <tr>
                 <!-- loop through each value of the fields to get the table header -->
@@ -126,27 +124,30 @@ const borrarCuenta = async () => {
             <tbody>
               <!-- Loop through the list get the each student data -->
               <tr v-for="item in reservas" :key="item.id">
-                <td>{{ item.restobar_id }}</td>
-                <td>{{ item.start_time }}</td>
-                <td>{{ item.table_id }}</td>
-                <td>
-                  <button
-                    @click="
-                      HandleButtonVerReserva(
-                        item.id,
-                        item.restobar_id.toString(),
-                        item.table_id,
-                        item.people,
-                        item.start_time.toString(),
-                        item.end_time.toString(),
-                        item.for_smokers,
-                        item.status
-                      )
-                    "
-                  >
-                    Más información
-                  </button>
-                </td>
+                <template v-if="item.status === 'Accepted'">
+                  <td>{{ item.restobar_id }}</td>
+                  <td>{{ item.start_time }}</td>
+                  <td>{{ item.table_id }}</td>
+                  <td>
+                    <button
+                      class="btn"
+                      @click="
+                        HandleButtonVerReserva(
+                          item.id,
+                          item.restobar_id.toString(),
+                          item.table_id,
+                          item.people,
+                          item.start_time.toString(),
+                          item.end_time.toString(),
+                          item.for_smokers,
+                          item.status
+                        )
+                      "
+                    >
+                      Más información
+                    </button>
+                  </td>
+                </template>
               </tr>
             </tbody>
           </table>
@@ -156,7 +157,9 @@ const borrarCuenta = async () => {
       <div id="botones">
         <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
         <button class="hidden" @click="editarPerfil">Editar perfíl</button>
-        <button @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
+        <button class="btn" @click="HandleButtonBorrarCuenta">
+          Borrar cuenta
+        </button>
       </div>
     </div>
   </div>
@@ -210,14 +213,14 @@ const borrarCuenta = async () => {
 }
 
 #botones button {
-  margin-bottom: 2%;
-  border-style: solid;
-  border-width: 1px;
-  background-color: lightgray;
-  border-color: black;
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.btn {
+  background-color: lightgray;
+  border-color: black;
 }
 
 @media screen and (min-width: 1024px) {
