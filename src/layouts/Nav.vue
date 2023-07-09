@@ -29,7 +29,10 @@ const logoutAndRedirect = () => {
       >
         <img :src="krteamlogo" alt="logo" />
       </router-link>
-      <div class="flex flex-row flex-nowrap gap-4">
+      <div
+        class="navbar-links"
+        :class="this.showMobileMenu ? 'open-menu' : 'closed-menu'"
+      >
         <router-link :to="{ name: 'Home' }">
           <span class="link">Home</span>
         </router-link>
@@ -53,9 +56,7 @@ const logoutAndRedirect = () => {
               <span class="link">Admin</span>
             </router-link>
           </div>
-          <div class="link" @click="logoutAndRedirect">
-            Logout
-          </div>
+          <div class="link" @click="logoutAndRedirect">Logout</div>
         </div>
         <template v-else>
           <!-- Mostrar solo si el usuario NO está logeado -->
@@ -67,9 +68,26 @@ const logoutAndRedirect = () => {
           </router-link>
         </template>
       </div>
+      <button @click="showMenu()" class="hamburger-icon">&#127828;</button>
     </div>
   </nav>
 </template>
+
+<script lang="ts">
+export default {
+  data() {
+    return {
+      showMobileMenu: false,
+    };
+  },
+  methods: {
+    showMenu() {
+      this.showMobileMenu = !this.showMobileMenu;
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 ul {
   list-style: none;
@@ -77,18 +95,8 @@ ul {
 
 nav {
   width: 100%;
+  height: 140px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-}
-.search-block {
-  background: #72caba;
-  display: flex;
-  height: 4rem;
-  width: 100%;
-  padding-inline: 5%;
-  color: white;
-  text-align: start;
-  align-items: center;
-  gap: 10px;
 }
 
 .link {
@@ -109,5 +117,43 @@ a:link {
 
 a:visited {
   text-decoration: none;
+}
+
+.open-menu {
+  display: flex;
+}
+
+.navbar-links {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
+.hamburger-icon {
+  display: none;
+  font-size: 35px;
+}
+
+@media screen and (max-width: 575px) {
+  .navbar-links {
+    position: absolute;
+    top: 138px;
+    background-color: #fff;
+    width: 100%;
+    left: 0;
+    flex-direction: column;
+    text-align: left;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    z-index: 9999;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+  .hamburger-icon {
+    display: block;
+  }
+  .closed-menu {
+    display: none !important;
+  }
 }
 </style>
