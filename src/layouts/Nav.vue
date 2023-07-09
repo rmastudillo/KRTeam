@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import krteamlogo from "@/assets/img/krteamlogo.svg";
 import { routes } from "@/router";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 import { storeToRefs } from "pinia";
@@ -19,20 +19,11 @@ const logoutAndRedirect = () => {
   useUserStore().logout();
   router.push({ name: "Home" });
 };
-</script>
 
-<script lang="ts">
-export default {
-  data() {
-    return {
-      showMobileMenu: false,
-    };
-  },
-  methods: {
-    showMenu() {
-      this.showMobileMenu = !this.showMobileMenu;
-    },
-  },
+const showMobileMenu = ref(false);
+
+const showMenu = () => {
+  showMobileMenu.value = !showMobileMenu.value;
 };
 </script>
 
@@ -47,7 +38,7 @@ export default {
       </router-link>
       <div
         class="navbar-links"
-        :class="this.showMobileMenu ? 'open-menu' : 'closed-menu'"
+        :class="showMobileMenu ? 'open-menu' : 'closed-menu'"
       >
         <router-link :to="{ name: 'Home' }">
           <span class="link">Home</span>
