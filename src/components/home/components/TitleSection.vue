@@ -4,6 +4,8 @@ import restobarLanding from "@/assets/img/restobarLanding.svg";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
+const loading = ref(false);
+
 const campos = ref([
   {
     id: "name",
@@ -48,7 +50,7 @@ const handleSubmit = async (e: any) => {
       "La solicitud ha sido enviada, nos contactaremos contigo a la brevedad!"
     );
   } catch (error) {
-    console.log(error);
+    alert("Ha ocurrido un error, ese Email ya está en uso.");
   }
 };
 
@@ -130,6 +132,7 @@ const redirigirMapa = () => {
         <button
           type="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          :disabled="loading"
         >
           <span class="mx-3 text-2xl">Enviar</span>
         </button>
