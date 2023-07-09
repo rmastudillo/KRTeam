@@ -132,7 +132,7 @@ const eliminarMesa = async (table_id: number) => {
         <input type="checkbox" v-model="inputFumadores" />
       </div>
 
-      <button type="submit" class="boton-crear-mesa btn btn-secondary" @click="crearMesa($event)">
+      <button type="submit" class="boton-crear-mesa btn" @click="crearMesa($event)">
         Crear Mesa
       </button>
     </form>
@@ -251,13 +251,13 @@ const eliminarMesa = async (table_id: number) => {
 
 .form-element .text {
   border: 2px solid black;
-  padding: 1px 3px;
+  padding: 1px 5px;
 }
 
-/* .boton-crear-mesa {
-  border: 2px solid black;
-  padding: 1px 3px;
-} */
+.boton-crear-mesa {
+  background-color: lightgray;
+  border-color: black;
+}
 .nombreTabla {
   margin-top: 2%;
   margin-left: 2%;
