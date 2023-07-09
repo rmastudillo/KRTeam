@@ -82,8 +82,8 @@ const borrarCuenta = async () => {
   try {
     await deleteUser();
     userStore.logout();
-    alert("Se ha eliminado la cuenta correctamente");
     router.push("/");
+    alert("Se ha eliminado la cuenta correctamente");
   } catch (error: any) {
     alert(
       `Ha ocurrido un error eliminado la cuenta, porfavor intentelo más tarde`
