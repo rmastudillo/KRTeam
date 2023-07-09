@@ -33,6 +33,17 @@ const campos = ref([
   { id: "region", label: "Region", type: "text", valor: "", required: true },
 ]);
 
+const checkCoordinates = async (address: any, commune: any, region: any) => {
+  const fullAddress = `${address}, ${commune}, ${region}`;
+  const addressResponse = await fetch(
+    `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+      fullAddress
+    )}&format=json`
+  );
+  const addressData = await addressResponse.json();
+  return addressData.length > 0 ? true : false;
+};
+
 const handleSubmit = async (e: any) => {
   e.preventDefault();
   const data = {
@@ -45,10 +56,21 @@ const handleSubmit = async (e: any) => {
   };
 
   try {
-    await postRestobarRequest(data);
-    alert(
-      "La solicitud ha sido enviada, nos contactaremos contigo a la brevedad!"
+    const response = await checkCoordinates(
+      data.address,
+      data.commune,
+      data.region
     );
+    if (response) {
+      await postRestobarRequest(data);
+      alert(
+        "La solicitud ha sido enviada, nos contactaremos contigo a la brevedad!"
+      );
+    } else {
+      alert(
+        "La dirección ingresada no es válida, por favor ingrese una dirección válida."
+      );
+    }
   } catch (error) {
     alert("Ha ocurrido un error, ese Email ya está en uso.");
   }

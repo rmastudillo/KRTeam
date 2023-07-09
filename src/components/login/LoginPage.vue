@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { client } from "@/api/client";
 import { useUserStore } from "@/stores/userStore";
+import { API_HOST } from "@/utils/constants";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -8,8 +9,6 @@ const router = useRouter();
 const userStore = useUserStore();
 let email = ref("");
 let password = ref("");
-
-const url = "http://35.232.169.75/api/v1/login";
 
 const login = async () => {
   const data = new URLSearchParams();
@@ -20,7 +19,7 @@ const login = async () => {
   data.append("client_id", "");
   data.append("client_secret", "");
   try {
-    const response = await client.post("/login", data, {
+    const response = await client.post(`/api/v1/login`, data, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -31,6 +30,7 @@ const login = async () => {
     userStore.setIsRestobarAdmin(responseData.is_restobar_owner);
     userStore.setIsLogged(true);
     alert("Inicio de sesión exitoso!");
+    await userStore.getInfo();
     if (responseData.is_superuser) router.push({ name: "Admin" });
     else {
       router.push({ name: "Local" });

@@ -32,7 +32,6 @@ const selectedDate = ref();
 const startHour = ref<string>("");
 const startMinute = ref<string>("");
 const endHour = ref<string>("");
-const endMinute = ref<string>("");
 const textInput = ref();
 const fumadores = ref<boolean>();
 const errors = ref<Errors>({});
@@ -72,13 +71,15 @@ const hours = [
   "23",
   "00",
 ];
+
+const hours2 = ["01", "02", "03"];
 const availableMinutes = ["00", "15", "30", "45"];
 
 const verificarDuracion = (
+  // Ya no se verificara que la reserva dure 30 minutos a 3 horas
   startHour: number,
   startMinute: number,
-  endHour: number,
-  endMinute: number
+  endHour: number
 ) => {
   let totalMinutos = 0;
   // Le sumo los minutos dada la diferencia de horas
@@ -88,14 +89,14 @@ const verificarDuracion = (
     totalMinutos += (endHour - (startHour - 24)) * 60;
   }
   // Le sumo los minutos dada la diferencia de minutos
-  totalMinutos += endMinute - startMinute;
+  totalMinutos += 0 - startMinute;
 
   if (totalMinutos > 3 * 60) {
     // No más de 3 horas
-    return false;
+    //return false;
   } else if (totalMinutos < 30) {
     // No menos de 30 min
-    return false;
+    //return false;
   }
 
   return true;
@@ -104,35 +105,35 @@ const verificarDuracion = (
 const crearReserva = async (event: any) => {
   event.preventDefault();
   errors.value = {};
-  console.log(1);
   try {
     if (
       !verificarDuracion(
         parseInt(startHour.value),
         parseInt(startMinute.value),
-        parseInt(endHour.value),
-        parseInt(endMinute.value)
+        parseInt(endHour.value)
       )
     ) {
       errors.value.duracion =
         "La duración de la reserva debe ser entre 30 minutos y 3 horas";
+      alert("La duración de la reserva debe ser entre 30 minutos y 3 horas");
     }
-    console.log(2);
     if (Object.keys(errors.value).length === 0) {
+      const start_time = new Date(
+        `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`
+      );
+      const end_time = new Date(start_time.getTime());
+      end_time.setHours(start_time.getHours() + parseInt(endHour.value));
       const reservaData = {
         people: parseInt(textInput.value),
-        start_time: `${selectedDate.value}T${startHour.value}:${startMinute.value}:00.000Z`,
-        end_time: `${selectedDate.value}T${endHour.value}:${endMinute.value}:00.000Z`,
+        start_time,
+        end_time,
         for_smokers: fumadores.value ? true : false,
       } as any;
-
       await userStore.postBooking(reservaData, Localid.value);
       alert("La reserva ha sido creada con éxito");
       modalReserva.value.hide();
     }
-    console.log(errors.value);
   } catch (error) {
-    console.log(error);
     alert("Error al realizar la reserva, porfavor intentelo más tarde");
   }
 };
@@ -316,19 +317,12 @@ onMounted(async () => {
               </div>
 
               <div class="modal-element">
-                <p>Horario Finalización:</p>
+                <p>¿Cuántas Tiempo estarás?</p>
                 <div class="container">
                   <select v-model="endHour" class="select" required>
                     <option value="" disabled>Selecciona Hora</option>
-                    <option v-for="hour in hours" :value="hour">
+                    <option v-for="hour in hours2" :value="hour">
                       {{ hour }} horas
-                    </option>
-                  </select>
-
-                  <select v-model="endMinute" class="select" required>
-                    <option value="" disabled>Selecciona Minutos</option>
-                    <option v-for="minute in availableMinutes" :value="minute">
-                      {{ minute }} minutos
                     </option>
                   </select>
                 </div>

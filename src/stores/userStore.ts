@@ -134,8 +134,7 @@ export const useUserStore = defineStore({
         const response = await postBooking(booking, Localid);
         this.userBooking = response.data;
       } catch (error: any) {
-        alert("Error al realizar la reserva, porfavor intentelo más tarde");
-        console.error("Error al realizar la reserva:", error);
+        throw new Error("Error al realizar la reserva:", error);
       }
       this.loading = false;
     },
@@ -145,7 +144,7 @@ export const useUserStore = defineStore({
       this.managerRestobarBooking = [];
       try {
         // Obtener información de usuario
-        this.getInfo();
+        await this.getInfo();
         if (this.user.restobars.length > 0) {
           const table_id = this.user.restobars[0].id;
           const response = await getReservations(table_id);

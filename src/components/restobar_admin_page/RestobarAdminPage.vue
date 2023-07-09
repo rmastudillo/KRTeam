@@ -1,18 +1,20 @@
 <script lang="ts" setup>
+import { patchReservations } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 
 const userStore = useUserStore();
 
 const getData = async () => {
   await userStore.getMyRestobarsBooking();
-  if (userStore.myRestobars) {
+  if (userStore.userInfo.restobars.length > 0 && userStore.myRestobars) {
     await userStore.managerGetMyTables(userStore.myRestobars.id);
   }
 };
-onMounted(async () => {
+onBeforeMount(async () => {
+  await userStore.getInfo();
   // Obtener mesas
-  getData();
+  await getData();
 });
 
 const mesas = ref<
@@ -64,7 +66,7 @@ const fieldsReservas = [
   "Mesa",
   "Número de personas",
   "Fecha",
-  "Hora",
+  "Estado",
   " ",
 ];
 
@@ -97,6 +99,27 @@ const eliminarMesa = async (table_id: number) => {
     alert("Se ha eliminado la mesa correctamente");
   } catch (error) {
     alert("Ha ocurrido un error al eliminar la mesa");
+  }
+  getData();
+};
+
+const cancelBooking = async (item: any) => {
+  try {
+    const status = "Canceled";
+    item.status = status;
+    const { id, ...rest } = item;
+    const data = {
+      status: "Canceled",
+      ...rest,
+    };
+
+    await patchReservations(data, Number(id));
+    // Cancelar reserva
+    console.log("Se ha cancelado la reserva correctamente");
+    alert("Se ha cancelado la reserva correctamente");
+  } catch (error) {
+    alert("No se pudo cancelar la reserva");
+    console.error("Error tratando de cancelar la reserva:", error);
   }
   getData();
 };
@@ -189,7 +212,7 @@ const eliminarMesa = async (table_id: number) => {
     <h2 class="nombreTabla">Reservas</h2>
     <hr />
     <div class="accionesTabla">
-      <div class="accion"><button>Refresh</button></div>
+      <div class="accion"><button @click="getData">Refresh</button></div>
       <div class="accion"><button>Export reservas</button></div>
     </div>
     <div class="containerTabla">
@@ -197,25 +220,28 @@ const eliminarMesa = async (table_id: number) => {
         <thead>
           <tr>
             <!-- loop through each value of the fields to get the table header -->
-            <th
-              v-for="field in userStore.managerRestobarBooking"
-              :key="field.id"
-            >
+            <th v-for="field in fieldsReservas" :key="field">
               {{ field }}
             </th>
           </tr>
         </thead>
         <tbody>
           <!-- Loop through the list get the each student data -->
-          <tr v-for="item in reservas" :key="item.id">
+          <tr v-for="item in userStore.managerRestobarBooking" :key="item.id">
             <td>{{ item.id }}</td>
-            <td>{{ item.table }}</td>
+            <td>{{ item.table_id }}</td>
             <td>{{ item.people }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ item.time }}</td>
+            <td>{{ item.start_time }}</td>
+            <td>{{ item.status }}</td>
             <td>
               <!-- <button class="btn btn-success">ACEPTAR</button> -->
-              <button class="btn btn-danger">Cancelar reserva</button>
+              <button
+                v-if="item.status !== 'Canceled'"
+                class="btn btn-danger"
+                @click="cancelBooking(item)"
+              >
+                Cancelar reserva
+              </button>
             </td>
           </tr>
         </tbody>
