@@ -65,7 +65,7 @@ const fieldsReservas = [
 
 const inputNombre = ref();
 const inputCapacidad = ref();
-const inputFumadores = ref();
+const inputFumadores = ref(false);
 
 const crearMesa = (event: any) => {
   event.preventDefault();
@@ -132,7 +132,7 @@ const eliminarMesa = async (table_id: number) => {
         <input type="checkbox" v-model="inputFumadores" />
       </div>
 
-      <button type="submit" class="boton-crear-mesa" @click="crearMesa($event)">
+      <button type="submit" class="boton-crear-mesa btn" @click="crearMesa($event)">
         Crear Mesa
       </button>
     </form>
@@ -162,7 +162,7 @@ const eliminarMesa = async (table_id: number) => {
               <td>{{ item.is_smoking_allowed ? "Si" : "No" }}</td>
               <td>{{ item.status }}</td>
               <td>
-                <button @click="eliminarMesa(item.id)">Eliminar mesa</button>
+                <button class="btn btn-danger" @click="eliminarMesa(item.id)">Eliminar mesa</button>
               </td>
             </tr>
           </tbody>
@@ -200,7 +200,10 @@ const eliminarMesa = async (table_id: number) => {
             <td>{{ item.people }}</td>
             <td>{{ item.date }}</td>
             <td>{{ item.time }}</td>
-            <td><button>ACEPTAR</button><button>RECHAZAR</button></td>
+            <td>
+              <!-- <button class="btn btn-success">ACEPTAR</button> -->
+              <button class="btn btn-danger">Cancelar reserva</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -248,12 +251,12 @@ const eliminarMesa = async (table_id: number) => {
 
 .form-element .text {
   border: 2px solid black;
-  padding: 1px 3px;
+  padding: 1px 5px;
 }
 
 .boton-crear-mesa {
-  border: 2px solid black;
-  padding: 1px 3px;
+  background-color: lightgray;
+  border-color: black;
 }
 .nombreTabla {
   margin-top: 2%;

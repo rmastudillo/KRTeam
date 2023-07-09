@@ -131,6 +131,7 @@ const borrarCuenta = async () => {
                 <td>{{ item.table_id }}</td>
                 <td>
                   <button
+                    class="btn"
                     @click="
                       HandleButtonVerReserva(
                         item.id,
@@ -156,7 +157,7 @@ const borrarCuenta = async () => {
       <div id="botones">
         <!-- Se dejó un botón de editar perfíl por si se usa en el futuro -->
         <button class="hidden" @click="editarPerfil">Editar perfíl</button>
-        <button @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
+        <button class="btn" @click="HandleButtonBorrarCuenta">Borrar cuenta</button>
       </div>
     </div>
   </div>
@@ -210,14 +211,14 @@ const borrarCuenta = async () => {
 }
 
 #botones button {
-  margin-bottom: 2%;
-  border-style: solid;
-  border-width: 1px;
-  background-color: lightgray;
-  border-color: black;
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.btn {
+  background-color: lightgray;
+  border-color: black;
 }
 
 @media screen and (min-width: 1024px) {
