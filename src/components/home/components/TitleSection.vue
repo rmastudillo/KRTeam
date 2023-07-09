@@ -5,25 +5,43 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const campos = ref([
-  { id: "name", label: "Nombre Restaurante", type: "text", valor: "" },
-  { id: "address", label: "Dirección", type: "text", valor: "" },
-  { id: "city", label: "Ciudad", type: "text", valor: "" },
-  { id: "capacity", label: "Capacidad (personas)", type: "number", valor: "" },
-  { id: "contactName", label: "Nombre de contacto", type: "text", valor: "" },
-  { id: "email", label: "Correo", type: "email", valor: "" },
-  { id: "phoneNumber", label: "Número de contacto", type: "tel", valor: "" },
+  {
+    id: "name",
+    label: "Nombre Restaurante",
+    type: "text",
+    valor: "",
+    required: true,
+  },
+  { id: "email", label: "Correo", type: "email", valor: "", required: true },
+  {
+    id: "address",
+    label: "Dirección",
+    type: "text",
+    valor: "",
+    required: true,
+  },
+  {
+    id: "unitNumber",
+    label: "Número de local (si aplica)",
+    type: "number",
+    valor: null,
+    required: false,
+  },
+  { id: "commune", label: "Comuna", type: "text", valor: "", required: true },
+  { id: "region", label: "Region", type: "text", valor: "", required: true },
 ]);
+
 const handleSubmit = async (e: any) => {
   e.preventDefault();
   const data = {
     name: campos.value[0].valor,
-    owner_email: campos.value[5].valor,
-    address: campos.value[1].valor,
-    unit_number: null,
-    commune: "Santiago",
-    region: "Metropolitana",
+    owner_email: campos.value[1].valor,
+    address: campos.value[2].valor,
+    unit_number: campos.value[3].valor,
+    commune: campos.value[4].valor,
+    region: campos.value[5].valor,
   };
-  console.log(data);
+
   try {
     await postRestobarRequest(data);
     alert(
@@ -103,7 +121,7 @@ const redirigirMapa = () => {
             :key="index"
             v-model="campo.valor"
             class="form-control"
-            required
+            :required="campo.required"
           />
           <label :for="campo.id">{{ campo.label }}</label>
         </div>
