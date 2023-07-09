@@ -311,9 +311,7 @@ onMounted(async () => {
               <input
                 class="text"
                 v-model="textInput"
-                inputmode="numeric"
-                pattern="[0-9]*"
-                placeholder=""
+                type="number"
                 required
               />
             </div>
@@ -367,7 +365,7 @@ onMounted(async () => {
           <div class="modal-footer">
             <button
               type="submit"
-              class="boton-crear-reserva"
+              class="boton-crear-reserva btn btn-secondary"
               onclick="event => crearReserva(event)"
             >
               RESERVAR
@@ -513,6 +511,7 @@ onMounted(async () => {
 
 .modal-dialog .text {
   border: 1px solid black;
+  padding: 1px 5px;
 }
 
 #contenedorCalendario {
@@ -526,6 +525,10 @@ onMounted(async () => {
   @media screen and (min-width: 1024px) {
     margin-right: 2%;
   }
+}
+
+#contenedorCalendario input {
+  padding: 1px 5px;
 }
 
 #contenedorPersonas {
@@ -577,7 +580,8 @@ onMounted(async () => {
 
 .boton-crear-reserva {
   border: 2px solid black;
-  width: 90%;
+  min-width: 100px;
+  width: 10%;
 }
 
 .modal-footer {
