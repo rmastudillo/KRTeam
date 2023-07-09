@@ -134,8 +134,7 @@ export const useUserStore = defineStore({
         const response = await postBooking(booking, Localid);
         this.userBooking = response.data;
       } catch (error: any) {
-        alert("Error al realizar la reserva, porfavor intentelo más tarde");
-        console.error("Error al realizar la reserva:", error);
+        throw new Error("Error al realizar la reserva:", error);
       }
       this.loading = false;
     },
