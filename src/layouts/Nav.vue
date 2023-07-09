@@ -47,7 +47,7 @@ const showMenu = () => {
           <span class="link">Ver locales</span>
         </router-link>
         <!-- Mostrar solo si el usuario está logeado -->
-        <div v-if="userIsLogged" class="flex flex-row flex-nowrap gap-4">
+        <div v-if="userIsLogged" class="navbar-links-user">
           <div v-if="!userIsAdminRestobar">
             <router-link :to="{ name: 'UserProfile' }">
               <span class="link">Perfil</span>
@@ -122,6 +122,13 @@ a:visited {
   gap: 20px;
 }
 
+.navbar-links-user {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+}
+
 .hamburger-icon {
   display: none;
   font-size: 35px;
@@ -140,6 +147,10 @@ a:visited {
     padding-bottom: 10px;
     z-index: 9999;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .navbar-links-user {
+    flex-direction: column;
   }
   .hamburger-icon {
     display: block;
