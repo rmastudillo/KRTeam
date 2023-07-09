@@ -20,22 +20,6 @@ const logoutAndRedirect = () => {
   router.push({ name: "Home" });
 };
 </script>
-
-<script lang="ts">
-export default {
-  data() {
-    return {
-      showMobileMenu: false,
-    };
-  },
-  methods: {
-    showMenu() {
-      this.showMobileMenu = !this.showMobileMenu;
-    },
-  },
-};
-</script>
-
 <template>
   <nav class="navbar flex flex-row justify-between">
     <div class="container">
@@ -88,6 +72,21 @@ export default {
     </div>
   </nav>
 </template>
+
+<script lang="ts">
+export default {
+  data() {
+    return {
+      showMobileMenu: false,
+    };
+  },
+  methods: {
+    showMenu() {
+      this.showMobileMenu = !this.showMobileMenu;
+    },
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 ul {
