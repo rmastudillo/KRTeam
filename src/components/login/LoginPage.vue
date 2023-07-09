@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { client } from "@/api/client";
 import { useUserStore } from "@/stores/userStore";
+import { API_HOST } from "@/utils/constants";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -9,7 +10,7 @@ const userStore = useUserStore();
 let email = ref("");
 let password = ref("");
 
-const url = "http://35.232.169.75/api/v1/login";
+const url = `${API_HOST}/api/v1/login`;
 
 const login = async () => {
   const data = new URLSearchParams();
@@ -20,7 +21,7 @@ const login = async () => {
   data.append("client_id", "");
   data.append("client_secret", "");
   try {
-    const response = await client.post("/login", data, {
+    const response = await client.post(`/api/v1/login`, data, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },

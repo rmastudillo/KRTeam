@@ -19,7 +19,7 @@ const register = async () => {
 
   try {
     const response = await client.post(
-      `/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`,
+      `/api/v1/signup?email=${email.value}&full_name=${name.value}&password=${password.value}`,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

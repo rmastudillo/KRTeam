@@ -185,6 +185,7 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
+          console.log(local,addressData);
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -216,6 +217,7 @@ onMounted(async () => {
             // El local debe tener por lo menos 1 mesa disponible
             return;
           }
+          console.log(local.coordinates[0]);
           L.marker(
             {
               lat: local.coordinates[0],
