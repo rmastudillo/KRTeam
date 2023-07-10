@@ -88,3 +88,8 @@ export const postBooking = async (data: any, restobar_id: number) =>
 
 export const patchReservations = async ( data: any, reservation_id: number) =>
   client.patch(`/api/v1/reservations/${reservation_id}`, data);
+
+// Ranking
+
+export const getRanking = async (restobar_id: number) =>
+  client.get(`/api/v1/ratings/restobar/${restobar_id}`);

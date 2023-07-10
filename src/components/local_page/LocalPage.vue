@@ -7,6 +7,7 @@ import { API_HOST } from "@/utils/constants";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
+import { getRanking } from "@/api/modules/common";
 
 const userStore = useUserStore();
 const modalReserva = ref();
@@ -27,6 +28,7 @@ const Localmenu_url = ref("");
 const Localid = ref(0);
 const Localowner_id = ref(0);
 const Localtables = ref<number[]>([]);
+const Localranking = ref(0);
 
 const selectedDate = ref();
 const startHour = ref<string>("");
@@ -151,6 +153,7 @@ const solicitudes = ref<
     owner_id: number;
     tables: Array<number>;
     coordinates: Array<number>;
+    ranking: number;
   }>
 >([]);
 
@@ -180,6 +183,9 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
+          const ranking = await getRanking(local.id)
+          console.log(ranking);
+          local.ranking = ranking.data.score;
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -230,6 +236,7 @@ onMounted(async () => {
                 (Localid.value = local.id),
                 (Localowner_id.value = local.owner_id),
                 (Localtables.value = local.tables);
+                (Localranking.value = local.ranking);
             }) // Cambia el título cuando se haga clic en el marcador
             .openPopup();
         });
@@ -370,6 +377,7 @@ onMounted(async () => {
           <p v-text="`Dirección: ${Localdirection}`"></p>
           <p v-text="`Comuna: ${Localcommune}`"></p>
           <p v-text="`Región: ${Localregion}`"></p>
+          <p v-text="`Raking: ${Localranking}`"></p>
         </div>
 
         <div id="button-containe">
