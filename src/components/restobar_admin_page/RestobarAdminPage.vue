@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { patchReservations } from "@/api/modules/common";
+import { patchReservations, patchRestobarByIdMenu } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
 import { onBeforeMount, ref } from "vue";
 
@@ -73,6 +73,29 @@ const fieldsReservas = [
 const inputNombre = ref();
 const inputCapacidad = ref();
 const inputFumadores = ref(false);
+const fileInput = ref();
+const file = ref();
+
+const onFileChange = (event: any) => {
+  file.value = event.target.files[0];
+  console.log(file.value)
+}
+
+const actualizarMenu = async (event: any) => {
+  event.preventDefault();
+  const formData = new FormData();
+  if (file) {
+    formData.append('menu_file', file.value);
+  }
+
+  try {
+    await patchRestobarByIdMenu(userStore.myRestobars.id, formData)
+    alert("Se ha actualizado el menú correctamente");
+  } catch (error) {
+    alert("Ha ocurrido un error al actualizar el menú");
+    console.log(error)
+  }
+}
 
 const crearMesa = async (event: any) => {
   event.preventDefault();
@@ -133,6 +156,30 @@ const cancelBooking = async (item: any) => {
         : "No hay restobares"
     }}
   </h1>
+  <div id="contenedorMenu" class="w-full">
+    <div class="elementoMenu">
+      <h4 class="nombreTabla">Actualizar menú del restobar:</h4>
+      <form id="formMenu" class="w-full" @submit="actualizarMenu">
+        <div class="form-element">
+          <input
+            type="file"
+            ref="fileInput"
+            @change="onFileChange"
+            required
+          />
+        </div>
+
+        <button
+        type="submit"
+        class="boton-actualizar-menu btn form-element"
+        @click="actualizarMenu($event)"
+      >
+        Actualizar
+      </button>
+        
+      </form>
+    </div>
+  </div>
   <!-- Tabla de las mesas -->
   <div id="contenedorMesas" class="w-full">
     <form id="formMesa" class="w-full" @submit="crearMesa">
@@ -259,11 +306,41 @@ const cancelBooking = async (item: any) => {
   width: 100%;
 }
 
+#contenedorMenu {
+    display: flex;
+    justify-content: center;
+}
+
 #contenedorMesas {
   @media screen and (min-width: 1024px) {
     display: flex;
     justify-content: center;
   }
+}
+
+#contenedorMenu .elementoMenu {
+  @media screen and (min-width: 1024px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+#formMenu {
+  text-align: center;
+  @media screen and (min-width: 1024px) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+#formMenu .form-element {
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.boton-actualizar-menu {
+  background-color: lightgray;
+  border-color: black;
 }
 
 #formMesa {
