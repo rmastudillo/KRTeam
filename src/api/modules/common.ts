@@ -12,7 +12,8 @@ export const postUser = async (data: any) => client.post("/api/v1/users", data);
 
 export const getUserInfo = async () => client.get("/api/v1/users/me");
 
-export const putUserInfo = async (data: any) => client.put("/api/v1/users/me", data);
+export const putUserInfo = async (data: any) =>
+  client.put("/api/v1/users/me", data);
 
 export const deleteUser = async () => client.delete("/api/v1/users/me");
 
@@ -43,10 +44,10 @@ export const deleteRestobarById = async (restobar_id: number) =>
   client.delete(`/api/v1/restobars/${restobar_id}`);
 
 export const patchRestobarById = async (restobar_id: number, data: any) =>
-  client.put(`/api/v1/restobars/${restobar_id}`, data);
+  client.patch(`/api/v1/restobars/${restobar_id}`, data);
 
 export const patchRestobarByIdMenu = async (restobar_id: number, data: any) =>
-  client.put(`/api/v1/restobars/${restobar_id}/menu`, data);
+  client.patch(`/api/v1/restobars/${restobar_id}/menu`, data, { headers: {'Content-Type': 'multipart/form-data'} });
 
 // Restobar requests
 
@@ -81,10 +82,25 @@ export const patchTable = async (
 export const getReservations = async (restobar_id: number) =>
   client.get(`/api/v1/reservations/restobar/${restobar_id}`);
 
-export const getBooking = async () => client.get("/api/v1/reservations/user/me");
+export const getBooking = async () =>
+  client.get("/api/v1/reservations/user/me");
 
 export const postBooking = async (data: any, restobar_id: number) =>
   client.post(`/api/v1/reservations/restobar/${restobar_id}`, data);
 
-export const patchReservations = async ( data: any, reservation_id: number) =>
+export const patchReservations = async (data: any, reservation_id: number) =>
   client.patch(`/api/v1/reservations/${reservation_id}`, data);
+
+// Ranking
+
+export const getRanking = async (restobar_id: number) =>
+  client.get(`/api/v1/ratings/restobar/${restobar_id}`);
+
+export const getMyRanking = async (restobar_id: number) =>
+  client.get(`/api/v1/ratings/restobar/${restobar_id}/users/me`);
+
+export const postRanking = async (data: any, restobar_id: number) =>
+  client.post(`/api/v1/ratings/restobar/${restobar_id}`, data);
+
+export const patchRating = async (data: any, restobar_id: number) =>
+  client.patch(`/api/v1/ratings/restobar/${restobar_id}`, data);
