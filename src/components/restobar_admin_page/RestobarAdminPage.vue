@@ -73,14 +73,27 @@ const fieldsReservas = [
 const inputNombre = ref();
 const inputCapacidad = ref();
 const inputFumadores = ref(false);
-const inputMenu = ref("");
+const fileInput = ref();
+const file = ref();
 
-const actualizarMenu = () => {
+const onFileChange = (event: any) => {
+  file.value = event.target.files[0];
+  console.log(file.value)
+}
+
+const actualizarMenu = async (event: any) => {
+  event.preventDefault();
+  const formData = new FormData();
+  if (file) {
+    formData.append('menu_file', file.value);
+  }
+
   try {
-    patchRestobarByIdMenu(userStore.myRestobars.id, { menu_file: inputMenu.value })
+    await patchRestobarByIdMenu(userStore.myRestobars.id, formData)
     alert("Se ha actualizado el menú correctamente");
   } catch (error) {
     alert("Ha ocurrido un error al actualizar el menú");
+    console.log(error)
   }
 }
 
@@ -149,9 +162,9 @@ const cancelBooking = async (item: any) => {
       <form id="formMenu" class="w-full" @submit="actualizarMenu">
         <div class="form-element">
           <input
-            class="text"
-            v-model="inputMenu"
-            placeholder="Url del menú"
+            type="file"
+            ref="fileInput"
+            @change="onFileChange"
             required
           />
         </div>
@@ -159,6 +172,7 @@ const cancelBooking = async (item: any) => {
         <button
         type="submit"
         class="boton-actualizar-menu btn form-element"
+        @click="actualizarMenu($event)"
       >
         Actualizar
       </button>
