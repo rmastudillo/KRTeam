@@ -77,7 +77,7 @@ const inputMenu = ref("");
 
 const actualizarMenu = () => {
   try {
-    patchRestobarByIdMenu(userStore.myRestobars.id, { menu_file: inputMenu })
+    patchRestobarByIdMenu(userStore.myRestobars.id, { menu_file: inputMenu.value })
     alert("Se ha actualizado el menú correctamente");
   } catch (error) {
     alert("Ha ocurrido un error al actualizar el menú");
