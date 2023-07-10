@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/userStore";
 import { computed, onBeforeMount, ref } from "vue";
 
 const userStore = useUserStore();
+// const columnTitles = ['Id', ' Mesa', 'Número de persona', 'Fecha','Estado', 'Acción 1', 'Valoración', 'Acción 2']; 
 const maxStars = 5;
 const rating = ref(0);
 const starClass = (star: any) => {
@@ -276,7 +277,7 @@ const cancelBooking = async (item: any) => {
               <button
                 class="btn btn-success"
                 @click="postRanking(data,item.id)"
-              >
+                >
                 Valorar
               </button> 
             </td>
