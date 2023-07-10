@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { getRanking } from "@/api/modules/common";
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
@@ -27,6 +28,7 @@ const Localmenu_url = ref("");
 const Localid = ref(0);
 const Localowner_id = ref(0);
 const Localtables = ref<number[]>([]);
+const Localranking = ref(0);
 
 const selectedDate = ref();
 const startHour = ref<string>("");
@@ -151,6 +153,7 @@ const solicitudes = ref<
     owner_id: number;
     tables: Array<number>;
     coordinates: Array<number>;
+    ranking: number;
   }>
 >([]);
 
@@ -164,6 +167,12 @@ const localIcon = L.icon({
   iconUrl: imggpslocal,
   iconSize: [30, 30], // Tamaño del icono, puedes ajustarlo a tus necesidades
 });
+
+const maxStars = 5;
+
+const starClass = (star: any) => {
+  return star <= Localranking.value ? "bi-star-fill" : "bi-star";
+};
 
 onMounted(async () => {
   try {
@@ -180,6 +189,13 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
+
+          try {
+            const ranking = await getRanking(local.id);
+            local.ranking = ranking.data.score;
+          } catch (error) {
+            console.log(error);
+          }
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -230,6 +246,7 @@ onMounted(async () => {
                 (Localid.value = local.id),
                 (Localowner_id.value = local.owner_id),
                 (Localtables.value = local.tables);
+              Localranking.value = local.ranking;
             }) // Cambia el título cuando se haga clic en el marcador
             .openPopup();
         });
@@ -371,6 +388,16 @@ onMounted(async () => {
           <p v-text="`Comuna: ${Localcommune}`"></p>
           <p v-text="`Región: ${Localregion}`"></p>
           <p>Menú: <a :href="Localmenu_url" target="_blank" >{{Localmenu_url}}</a></p>
+          <div>
+            <p>Calificación: {{ Localranking }}</p>
+            <div>
+              <i
+                v-for="star in maxStars"
+                :key="star"
+                :class="starClass(star)"
+              ></i>
+            </div>
+          </div>
         </div>
 
         <div id="button-containe">
@@ -588,5 +615,17 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+  color: #ffc107;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.bi-star {
+  color: #e4e5e9;
 }
 </style>

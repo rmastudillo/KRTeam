@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/userStore";
 import { onBeforeMount, ref } from "vue";
 
 const userStore = useUserStore();
+// const columnTitles = ['Id', ' Mesa', 'Número de persona', 'Fecha','Estado', 'Acción 1', 'Valoración', 'Acción 2'];
 
 const getData = async () => {
   await userStore.getMyRestobarsBooking();
@@ -270,6 +271,11 @@ const cancelBooking = async (item: any) => {
             <th v-for="field in fieldsReservas" :key="field">
               {{ field }}
             </th>
+            <!-- Titulos hardcoeados
+            <th v-for="(title, index) in columnTitles" :key="index">
+              {{ title }}
+            </th> 
+            -->
           </tr>
         </thead>
         <tbody>
