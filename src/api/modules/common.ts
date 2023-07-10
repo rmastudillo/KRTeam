@@ -44,10 +44,10 @@ export const deleteRestobarById = async (restobar_id: number) =>
   client.delete(`/api/v1/restobars/${restobar_id}`);
 
 export const patchRestobarById = async (restobar_id: number, data: any) =>
-  client.put(`/api/v1/restobars/${restobar_id}`, data);
+  client.patch(`/api/v1/restobars/${restobar_id}`, data);
 
 export const patchRestobarByIdMenu = async (restobar_id: number, data: any) =>
-  client.put(`/api/v1/restobars/${restobar_id}/menu`, data);
+  client.patch(`/api/v1/restobars/${restobar_id}/menu`, data, { headers: {'Content-Type': 'multipart/form-data'} });
 
 // Restobar requests
 
