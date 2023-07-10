@@ -93,3 +93,6 @@ export const patchReservations = async ( data: any, reservation_id: number) =>
 
 export const getRanking = async (restobar_id: number) =>
   client.get(`/api/v1/ratings/restobar/${restobar_id}`);
+
+export const postRanking = async (data:any, restobar_id: number) =>
+  client.post(`/api/v1/ratings/restobar/${restobar_id}`, data);
