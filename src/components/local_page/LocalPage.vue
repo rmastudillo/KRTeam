@@ -370,7 +370,7 @@ onMounted(async () => {
           <p v-text="`Dirección: ${Localdirection}`"></p>
           <p v-text="`Comuna: ${Localcommune}`"></p>
           <p v-text="`Región: ${Localregion}`"></p>
-          <p v-text="`Menú: ${Localmenu_url}`"></p>
+          <p>Menú: <a :href="Localmenu_url" target="_blank" >{{Localmenu_url}}</a></p>
         </div>
 
         <div id="button-containe">
