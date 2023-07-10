@@ -94,7 +94,7 @@ const borrarCuenta = async () => {
 
 <template>
   <div class="w-full">
-    <h1 class="titulo">Perfíl</h1>
+    <h1 class="titulo">Perfil</h1>
     <div id="infobox">
       <!-- <div class="datos">
         <h4>Usuario:</h4>

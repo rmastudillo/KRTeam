@@ -1,26 +1,10 @@
 <script lang="ts" setup>
-import { patchReservations, postRanking } from "@/api/modules/common";
+import { patchReservations } from "@/api/modules/common";
 import { useUserStore } from "@/stores/userStore";
-import { computed, onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 
 const userStore = useUserStore();
-// const columnTitles = ['Id', ' Mesa', 'Número de persona', 'Fecha','Estado', 'Acción 1', 'Valoración', 'Acción 2']; 
-const maxStars = 5;
-const rating = ref(0);
-const starClass = (star: any) => {
-  return star <= rating.value ? 'bi-star-fill' : 'bi-star';
-};
-
-const data = computed(() => ({
-  "score" : rating.value
-}));
-const setRating = (star:any) => {
-  rating.value = star;
-  
-
-};
-
-
+// const columnTitles = ['Id', ' Mesa', 'Número de persona', 'Fecha','Estado', 'Acción 1', 'Valoración', 'Acción 2'];
 
 const getData = async () => {
   await userStore.getMyRestobarsBooking();
@@ -265,27 +249,6 @@ const cancelBooking = async (item: any) => {
                 Cancelar reserva
               </button>
             </td>
-            <td>
-              <div>
-                  <h5>Calificación: {{ rating }}</h5>
-                  <div>
-                    <i
-                      v-for="star in maxStars"
-                      :key="star"
-                      :class="starClass(star)"
-                      @click="setRating(star)"
-                    ></i>
-                  </div>
-                </div>
-            </td>
-            <td>
-              <button
-                class="btn btn-success"
-                @click="postRanking(data,item.id)"
-                >
-                Valorar
-              </button> 
-            </td>
           </tr>
         </tbody>
       </table>
@@ -351,13 +314,6 @@ const cancelBooking = async (item: any) => {
   margin-top: 1%;
   margin-left: 2%;
   margin-right: 2%;
-}
-
-.bi-star-fill,
-.bi-star {
-  color: #ffc107;
-  font-size: 2rem;
-  cursor: pointer;
 }
 
 .accion {

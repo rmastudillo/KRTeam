@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { getRanking } from "@/api/modules/common";
 import imglocal from "@/assets/img/image3.jpg";
 import imggpslocal from "@/assets/img/local1.png";
 import imggps from "@/assets/img/ubi1.png";
@@ -7,7 +8,6 @@ import { API_HOST } from "@/utils/constants";
 import { Modal } from "bootstrap";
 import L, { LatLngLiteral } from "leaflet";
 import { computed, onMounted, ref } from "vue";
-import { getRanking } from "@/api/modules/common";
 
 const userStore = useUserStore();
 const modalReserva = ref();
@@ -168,6 +168,12 @@ const localIcon = L.icon({
   iconSize: [30, 30], // Tamaño del icono, puedes ajustarlo a tus necesidades
 });
 
+const maxStars = 5;
+
+const starClass = (star: any) => {
+  return star <= Localranking.value ? "bi-star-fill" : "bi-star";
+};
+
 onMounted(async () => {
   try {
     // Obtener Los Locales
@@ -183,9 +189,13 @@ onMounted(async () => {
             )}&format=json`
           );
           const addressData = await addressResponse.json();
-          const ranking = await getRanking(local.id)
-          console.log(ranking);
-          local.ranking = ranking.data.score;
+
+          try {
+            const ranking = await getRanking(local.id);
+            local.ranking = ranking.data.score;
+          } catch (error) {
+            console.log(error);
+          }
           if (addressData && addressData.length > 0) {
             local.coordinates = [0, 0];
             local.coordinates[0] = parseFloat(addressData[0].lat);
@@ -236,7 +246,7 @@ onMounted(async () => {
                 (Localid.value = local.id),
                 (Localowner_id.value = local.owner_id),
                 (Localtables.value = local.tables);
-                (Localranking.value = local.ranking);
+              Localranking.value = local.ranking;
             }) // Cambia el título cuando se haga clic en el marcador
             .openPopup();
         });
@@ -377,7 +387,17 @@ onMounted(async () => {
           <p v-text="`Dirección: ${Localdirection}`"></p>
           <p v-text="`Comuna: ${Localcommune}`"></p>
           <p v-text="`Región: ${Localregion}`"></p>
-          <p v-text="`Raking: ${Localranking}`"></p>
+
+          <div>
+            <p>Calificación: {{ Localranking }}</p>
+            <div>
+              <i
+                v-for="star in maxStars"
+                :key="star"
+                :class="starClass(star)"
+              ></i>
+            </div>
+          </div>
         </div>
 
         <div id="button-containe">
@@ -595,5 +615,17 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.bi-star-fill,
+.bi-star-half,
+.bi-star {
+  color: #ffc107;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.bi-star {
+  color: #e4e5e9;
 }
 </style>
