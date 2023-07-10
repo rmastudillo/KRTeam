@@ -82,7 +82,7 @@ onMounted(async () => {
     const minuto_fin = String(endDate.getMinutes()).padStart(2, "0");
     reserva.value.start_time = `Fecha: ${dia_inicio}/${mes_inicio}  Hora: ${hora_inicio}:${minuto_inicio}`;
     reserva.value.end_time = `Fecha: ${dia_fin}/${mes_fin}  Hora: ${hora_fin}:${minuto_fin}`;
-    const response = await getMyRanking(Number(id));
+    const response = await getMyRanking(Number(reserva.value.local));
     rating.value = response.data.length > 0 ? response.data[0].score : 0;
   } catch (error) {
     console.error(error);
@@ -140,8 +140,8 @@ const setRating = async (star: any) => {
     const value = {
       score: star,
     };
-    await patchRating(value, Number(id));
-    const response = await getMyRanking(Number(id));
+    await patchRating(value, Number(reserva.value.local));
+    const response = await getMyRanking(Number(reserva.value.local));
     rating.value = response.data.length > 0 ? response.data[0].score : 2;
   } catch (error) {
     console.error(error);
@@ -153,8 +153,8 @@ const setNewRating = async (star: any) => {
     const value = {
       score: star,
     };
-    await postRanking(value, Number(id));
-    const response = await getMyRanking(Number(id));
+    await postRanking(value, Number(reserva.value.local));
+    const response = await getMyRanking(Number(reserva.value.local));
     rating.value = response.data.length > 0 ? response.data[0].score : 2;
   } catch (error) {
     console.error(error);
