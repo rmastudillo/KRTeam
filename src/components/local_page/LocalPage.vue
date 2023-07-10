@@ -370,6 +370,7 @@ onMounted(async () => {
           <p v-text="`Dirección: ${Localdirection}`"></p>
           <p v-text="`Comuna: ${Localcommune}`"></p>
           <p v-text="`Región: ${Localregion}`"></p>
+          <p v-text="`Menú: ${Localmenu_url}`"></p>
         </div>
 
         <div id="button-containe">
