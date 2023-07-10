@@ -240,6 +240,11 @@ const cancelBooking = async (item: any) => {
             <th v-for="field in fieldsReservas" :key="field">
               {{ field }}
             </th>
+            <!-- Titulos hardcoeados
+            <th v-for="(title, index) in columnTitles" :key="index">
+              {{ title }}
+            </th> 
+            -->
           </tr>
         </thead>
         <tbody>
